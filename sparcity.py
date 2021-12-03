@@ -38,16 +38,13 @@ data_tab["nyc"] = read_csv(tabulars["nyc"], index_col='COLLISION_ID', na_values=
 data_time["air"] = read_csv(timeseries["air"], index_col='DATE', na_values='', parse_dates=True, infer_datetime_format=True)
 data_time["nyc"] = read_csv(timeseries["nyc"], index_col='timestamp', na_values='', parse_dates=True, infer_datetime_format=True)
 
-print("we done1")
 #Make scatter plots
 
-scatter_sparcity(data_tab["air"], "./images/lab1/sparcity/air_tabular_sparcity_scatter.png")
-scatter_sparcity(data_tab["nyc"], "./images/lab1/sparcity/nyc_tabular_sparcity_scatter.png")
+#scatter_sparcity(data_tab["air"], "./images/lab1/sparcity/air_tabular_sparcity_scatter.png")
+#scatter_sparcity(data_tab["nyc"], "./images/lab1/sparcity/nyc_tabular_sparcity_scatter.png")
 scatter_sparcity(data_time["air"], "./images/lab1/sparcity/air_time_sparcity_scatter.png")
 scatter_sparcity(data_time["nyc"], "./images/lab1/sparcity/nyc_time_sparcity_scatter.png")
 
-
-print("wah")
 #%%
 # make plots for symbolic data
 
@@ -75,7 +72,6 @@ sparcity_for_symbols(data_time["air"], "./images/lab1/sparcity/air_time_sparcity
 sparcity_for_symbols(data_time["nyc"], "./images/lab1/sparcity/nyc_time_sparcity_symbols.png")
 
 
-print("we done")
 # print correlation matrixes
 
 print(data_tab["air"].corr())
