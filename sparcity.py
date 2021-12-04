@@ -80,7 +80,8 @@ def sparcity_for_symbols(data, output_filename):
     savefig(output_filename)
     show()
 
-#sparcity_for_symbols(data_tab["air"], "./images/lab1/sparcity/air_tabular_sparcity_symbols.png")
+#BOTH NEED FIXING
+sparcity_for_symbols(data_tab["air"], "./images/lab1/sparcity/air_tabular_sparcity_symbols.png")
 sparcity_for_symbols(data_tab["nyc"], "./images/lab1/sparcity/nyc_tabular_sparcity_symbols.png")
 #NOT NEEDED?
 #sparcity_for_symbols(data_time["air"], "./images/lab1/sparcity/air_time_sparcity_symbols.png")
