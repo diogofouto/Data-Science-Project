@@ -46,7 +46,7 @@ def mv_drop_vars(data, mv, file):
 
     missings = [c for c in mv.keys() if mv[c] > threshold]
     df = data.drop(columns=missings, inplace=False)
-    df.to_csv(f'data/{file}_drop_columns_mv.csv', index=False)
+    df.to_csv(f'data/{file}_drop_columns_mv.csv', index=True)
     print('Dropped variables', missings)
 #%%
 mv_drop_vars(air_data, air_mvs, AQ_FNAME)
@@ -63,7 +63,7 @@ def mv_drop_recs(data, file):
     threshold = data.shape[1] * 0.50
 
     df = data.dropna(thresh=threshold, inplace=False)
-    df.to_csv(f'data/{file}_drop_records_mv.csv', index=False)
+    df.to_csv(f'data/{file}_drop_records_mv.csv', index=True)
     print("After: " + str(df.shape))
 #%%
 mv_drop_recs(air_data, AQ_FNAME)
@@ -106,7 +106,7 @@ def fill_missing_values(data, file):
         tmp_bool = pd.DataFrame(imp.fit_transform(data[binary_vars]), columns=binary_vars)
 
     df = pd.concat([tmp_nr, tmp_sb, tmp_bool], axis=1)
-    df.to_csv(f'data/{file}_mv_most_frequent.csv', index=False)
+    df.to_csv(f'data/{file}_mv_most_frequent.csv', index=True)
     return df
 
 #%%

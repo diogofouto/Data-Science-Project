@@ -1,3 +1,4 @@
+#%%
 from pandas import read_csv, DataFrame, concat
 from pandas.plotting import register_matplotlib_converters
 from ds_charts import get_variable_types
@@ -7,8 +8,8 @@ from numpy import number
 
 register_matplotlib_converters()
 
-AIR_QUALITY_FILE = "data/air_quality_tabular.csv"
-COLLISIONS_FILE = "data/NYC_collisions_tabular.csv"
+AIR_QUALITY_FILE = "data/air_quality_tabular_mv_most_frequent.csv"
+COLLISIONS_FILE = "data/NYC_collisions_tabular_mv_most_frequent.csv"
 
 
 air_data = read_csv(AIR_QUALITY_FILE, index_col="FID", na_values="", parse_dates=True, infer_datetime_format=True)
@@ -37,12 +38,14 @@ def dummy(data, filename):
     symbolic_vars = variables['Symbolic']
     data = data.astype(str)
     df = dummify(data, symbolic_vars)
-    df.to_csv(f'data/transformed/{filename}_dummified.csv', index=False)
+    df.to_csv(f'data/{filename}_dummified.csv', index=True)
 
     return df
 
-#dummified_air_data = dummy(air_data, "air_quality_tabular")
+#%%
 dummified_collision_data = dummy(collisions_data, "NYC_collisions_tabular")
-
-#dummified_air_data.describe(include=[bool])
 dummified_collision_data.describe(include=[bool])
+
+#%%
+dummified_air_data = dummy(air_data, "air_quality_tabular")
+dummified_air_data.describe(include=[bool])
