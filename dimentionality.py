@@ -4,7 +4,7 @@ from pandas import read_csv
 from pandas import DataFrame
 from pandas.plotting import register_matplotlib_converters
 
-from matplotlib.pyplot import figure, savefig, show
+from matplotlib.pyplot import figure, savefig, show, xticks, subplots_adjust
 from ds_charts import bar_chart, get_variable_types
 
 # Extract data from files to dataframes
@@ -112,11 +112,11 @@ def count_missing_values(data, filename):
         if nr > 0:
             mv[var] = nr
 
-    figure()
-    print(len(list(mv.keys())))
-    print(len(list(mv.values())))
+    figure(figsize=(5,5))
     bar_chart(list(mv.keys()), list(mv.values()), title='Nr of missing values per variable',
                 xlabel='variables', ylabel='nr missing values', rotation=True)
+    xticks(fontsize=5, rotation=60)
+    subplots_adjust(bottom=0.25)
     savefig(filename)
     show()
 
