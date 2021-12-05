@@ -1,9 +1,8 @@
 #%%
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from seaborn import displot
+from seaborn import distplot
 from scipy.stats import norm, expon, lognorm
 from pandas.plotting import register_matplotlib_converters
 from ds_charts import get_variable_types, choose_grid, multiple_line_chart, multiple_bar_chart, bar_chart, HEIGHT
@@ -15,11 +14,10 @@ register_matplotlib_converters()
 
 air_data = pd.read_csv(AIR_QUALITY_FILE, index_col="FID", parse_dates=True, infer_datetime_format=True)
 collisions_data = pd.read_csv(COLLISIONS_FILE, index_col="COLLISION_ID", parse_dates=True, infer_datetime_format=True).drop(["UNIQUE_ID", "VEHICLE_ID"], axis=1)
-
+# %%
 """
 ---------- FIVE-NUMBER SUMMARY ----------
 """
-# %%
 summary5_air = air_data.describe()
 summary5_air
 
@@ -38,21 +36,13 @@ def boxplot(data, path):
     if [] == numeric_vars:
         raise ValueError('There are no numeric variables.')
     rows, cols = choose_grid(len(numeric_vars))
-    fig, axs = plt.subplots(rows, cols, figsize=(cols*HEIGHT, rows*HEIGHT))
+    fig, axs = plt.subplots(rows, cols, figsize=(cols*HEIGHT, rows*HEIGHT), squeeze=False)
     i, j = 0, 0
     for n in range(len(numeric_vars)):
-        if rows == 1:
-            if cols != 1:
-                axs[j].set_title('Boxplot for %s'%numeric_vars[n])
-                axs[j].boxplot(data[numeric_vars[n]].dropna().values)
-            else:
-                axs.set_title('Boxplot for %s'%numeric_vars[n])
-                axs.boxplot(data[numeric_vars[n]].dropna().values)
-        else:
-            axs[i, j].set_title('Boxplot for %s'%numeric_vars[n])
-            axs[i, j].boxplot(data[numeric_vars[n]].dropna().values)
+        axs[i, j].set_title('Boxplot for %s'%numeric_vars[n])
+        axs[i, j].boxplot(data[numeric_vars[n]].dropna().values)
         i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
-    plt.savefig(path)
+    plt.savefig(path, dpi=300, bbox_inches='tight')
     plt.show()
 # %%
 boxplot(air_data, "images/lab1/distribution/air_quality_boxplot.png")
@@ -65,6 +55,7 @@ Here, we want to compare between the outliers caught by the
 IQR outliers and the n-std outliers.
 """
 def outliers(data, path):
+    #? Devemos explorar diferentes NR_STDEV?
     NR_STDEV: int = 2
 
     numeric_vars = get_variable_types(data)['Numeric']
@@ -88,7 +79,7 @@ def outliers(data, path):
     outliers = {'iqr': outliers_iqr, 'stdev': outliers_stdev}
     plt.figure(figsize=(12, HEIGHT))
     multiple_bar_chart(numeric_vars, outliers, title='Nr of outliers per variable', xlabel='variables', ylabel='nr outliers', percentage=False)
-    plt.savefig(path)
+    plt.savefig(path, dpi=300, bbox_inches='tight')
     plt.show()
 
 #%%
@@ -103,36 +94,22 @@ The previous diagrams don't give us a sense of the
 distribution of all of the individual variables. This is
 why we will use histograms next.
 """
-#TODO: Meter escala boa para a idade das pessoas.
-
 def histogram(data, path):
     numeric_vars = get_variable_types(data)['Numeric']
     if [] == numeric_vars:
         raise ValueError('There are no numeric variables.')
 
     rows, cols = choose_grid(len(numeric_vars))
-    fig, axs = plt.subplots(rows, cols, figsize=(cols*HEIGHT, rows*HEIGHT))
+    fig, axs = plt.subplots(rows, cols, figsize=(cols*HEIGHT, rows*HEIGHT), squeeze=False)
     i, j = 0, 0
 
     for n in range(len(numeric_vars)):
-        if rows == 1:
-            if cols != 1:
-                axs[j].set_title('Histogram for %s'%numeric_vars[n])
-                axs[j].set_xlabel(numeric_vars[n])
-                axs[j].set_ylabel("nr records")
-                axs[j].hist(data[numeric_vars[n]].dropna().values, 'auto')
-            else:
-                axs.set_title('Histogram for %s'%numeric_vars[n])
-                axs.set_xlabel(numeric_vars[n])
-                axs.set_ylabel("nr records")
-                axs.hist(data[numeric_vars[n]].dropna().values, 'auto')
-        else:
-            axs[i, j].set_title('Histogram for %s'%numeric_vars[n])
-            axs[i, j].set_xlabel(numeric_vars[n])
-            axs[i, j].set_ylabel("nr records")
-            axs[i, j].hist(data[numeric_vars[n]].dropna().values, 'auto')
+        axs[i, j].set_title('Histogram for %s'%numeric_vars[n])
+        axs[i, j].set_xlabel(numeric_vars[n])
+        axs[i, j].set_ylabel("nr records")
+        axs[i, j].hist(data[numeric_vars[n]].dropna().values, 'auto')
         i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
-    plt.savefig(path)
+    plt.savefig(path, dpi=300, bbox_inches='tight')
     plt.show()
 
 # %%
@@ -146,30 +123,21 @@ def histogram_with_trend(data, path):
         raise ValueError('There are no numeric variables.')
 
     rows, cols = choose_grid(len(numeric_vars))
-    fig, axs = plt.subplots(rows, cols, figsize=(cols*HEIGHT, rows*HEIGHT))
+    fig, axs = plt.subplots(rows, cols, figsize=(cols*HEIGHT, rows*HEIGHT), squeeze=False)
     i, j = 0, 0
     for n in range(len(numeric_vars)):
-        if rows == 1:
-            if cols != 1:
-                axs[j].set_title('Histogram with trend for %s'%numeric_vars[n])
-                displot(data[numeric_vars[n]].dropna().values, norm_hist=True, ax=axs[j], axlabel=numeric_vars[n])
-            else:
-                axs.set_title('Histogram with trend for %s'%numeric_vars[n])
-                displot(data[numeric_vars[n]].dropna().values, norm_hist=True, ax=axs, axlabel=numeric_vars[n])
-        else:
-            axs[i, j].set_title('Histogram with trend for %s'%numeric_vars[n])
-            displot(data[numeric_vars[n]].dropna().values, norm_hist=True, ax=axs[i, j], axlabel=numeric_vars[n])
+        axs[i, j].set_title('Histogram with trend for %s'%numeric_vars[n])
+        distplot(data[numeric_vars[n]].dropna().values, norm_hist=True, ax=axs[i, j], axlabel=numeric_vars[n])
         i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
-    plt.savefig(path)
+    plt.savefig(path, dpi=300, bbox_inches='tight')
     plt.show()
-
-# %%
+#%%
 histogram_with_trend(air_data, "images/lab1/distribution/air_quality_histograms_trend.png")
 # %%
 histogram_with_trend(collisions_data, "images/lab1/distribution/nyc_crashes_histograms_trend.png")
 #%%
 def compute_known_distributions(x_values: list) -> dict:
-    #!TODO: experimentar mais distribuicoes!!!!!!!!
+    #? Devemos experimentar mais distribuicoes?
     distributions = dict()
     # Gaussian
     mean, sigma = norm.fit(x_values)
@@ -198,15 +166,9 @@ def fit_distributions(data, path):
     fig, axs = plt.subplots(rows, cols, figsize=(cols*HEIGHT, rows*HEIGHT), squeeze=False)
     i, j = 0, 0
     for n in range(len(numeric_vars)):
-        if rows == 1:
-            if cols != 1:
-                histogram_with_distributions(axs[j], data[numeric_vars[n]].dropna(), numeric_vars[n])
-            else:
-                histogram_with_distributions(axs, data[numeric_vars[n]].dropna(), numeric_vars[n])
-        else:
-            histogram_with_distributions(axs[i, j], data[numeric_vars[n]].dropna(), numeric_vars[n])
+        histogram_with_distributions(axs[i, j], data[numeric_vars[n]].dropna(), numeric_vars[n])
         i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
-    plt.savefig(path)
+    plt.savefig(path, dpi=300, bbox_inches='tight')
     plt.show()
 
 # %%
@@ -231,10 +193,10 @@ def sym_bars(data, path):
         counts = data[symbolic_vars[n]].value_counts()
         bar_chart(counts.index.to_list(), counts.values, ax=axs[i, j], title='Histogram for %s'%symbolic_vars[n], xlabel=symbolic_vars[n], ylabel='nr records', percentage=False)
         i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
-    plt.savefig(path)
+    plt.savefig(path, dpi=300, bbox_inches='tight')
     plt.show()
 #%%
-sym_bars(collisions_data.drop(["PERSON_ID"], axis=1), "images/lab1/distribution/nyc_crashes_syms.png")
+sym_bars(collisions_data, "images/lab1/distribution/nyc_crashes_syms.png")
 #%%
 #! Tive que apagar uma entrada com um "s" no GbCity para essa coluna nao contar como symbolic || Scratch that, a coluna fica sempre como object..?
 sym_bars(air_data.drop("GbCity", axis=1), "images/lab1/distribution/air_quality_syms.png")
