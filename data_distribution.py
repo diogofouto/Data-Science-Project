@@ -3,17 +3,18 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from seaborn import distplot
+from seaborn import displot
+from scipy.stats import norm, expon, lognorm
 from pandas.plotting import register_matplotlib_converters
-from ds_charts import get_variable_types, choose_grid, multiple_bar_chart, bar_chart, HEIGHT
+from ds_charts import get_variable_types, choose_grid, multiple_line_chart, multiple_bar_chart, bar_chart, HEIGHT
 
 AIR_QUALITY_FILE = "data/air_quality_tabular.csv"
 COLLISIONS_FILE = "data/NYC_collisions_tabular.csv"
 
 register_matplotlib_converters()
 
-air_data = pd.read_csv(AIR_QUALITY_FILE, index_col="FID", na_values="", parse_dates=True, infer_datetime_format=True)
-collisions_data = pd.read_csv(COLLISIONS_FILE, index_col="COLLISION_ID", na_values="", parse_dates=True, infer_datetime_format=True)
+air_data = pd.read_csv(AIR_QUALITY_FILE, index_col="FID", parse_dates=True, infer_datetime_format=True)
+collisions_data = pd.read_csv(COLLISIONS_FILE, index_col="COLLISION_ID", parse_dates=True, infer_datetime_format=True).drop(["UNIQUE_ID", "VEHICLE_ID"], axis=1)
 
 """
 ---------- FIVE-NUMBER SUMMARY ----------
@@ -25,14 +26,13 @@ summary5_air
 #%%
 summary5_colls = collisions_data.describe()
 summary5_colls
-
+# %%
 """
 ---------- BOXPLOTS ----------
 These have the intent of helping us visualize what the
 five-number summaries mean.
 """
 
-# %%
 def boxplot(data, path):
     numeric_vars = get_variable_types(data)['Numeric']
     if [] == numeric_vars:
@@ -42,8 +42,12 @@ def boxplot(data, path):
     i, j = 0, 0
     for n in range(len(numeric_vars)):
         if rows == 1:
-            axs[j].set_title('Boxplot for %s'%numeric_vars[n])
-            axs[j].boxplot(data[numeric_vars[n]].dropna().values)
+            if cols != 1:
+                axs[j].set_title('Boxplot for %s'%numeric_vars[n])
+                axs[j].boxplot(data[numeric_vars[n]].dropna().values)
+            else:
+                axs.set_title('Boxplot for %s'%numeric_vars[n])
+                axs.boxplot(data[numeric_vars[n]].dropna().values)
         else:
             axs[i, j].set_title('Boxplot for %s'%numeric_vars[n])
             axs[i, j].boxplot(data[numeric_vars[n]].dropna().values)
@@ -54,15 +58,12 @@ def boxplot(data, path):
 boxplot(air_data, "images/lab1/distribution/air_quality_boxplot.png")
 # %%
 boxplot(collisions_data, "images/lab1/distribution/nyc_crashes_boxplot.png")
-
-#TODO: retirar variaveis parvos tipo os IDs
-
+# %%
 """
 ---------- OUTLIERS ----------
 Here, we want to compare between the outliers caught by the
 IQR outliers and the n-std outliers.
 """
-# %%
 def outliers(data, path):
     NR_STDEV: int = 2
 
@@ -90,12 +91,10 @@ def outliers(data, path):
     plt.savefig(path)
     plt.show()
 
-#TODO: retirar variaveis parvas tipo os IDs
-
-# %%
-outliers(collisions_data, "images/lab1/distribution/nyc_crashes_outliers.png")
 #%%
 outliers(air_data, "images/lab1/distribution/air_quality_outliers.png")
+# %%
+outliers(collisions_data, "images/lab1/distribution/nyc_crashes_outliers.png")
 
 # %%
 """
@@ -104,8 +103,6 @@ The previous diagrams don't give us a sense of the
 distribution of all of the individual variables. This is
 why we will use histograms next.
 """
-
-#TODO: retirar variaveis parvas tipo os IDs
 #TODO: Meter escala boa para a idade das pessoas.
 
 def histogram(data, path):
@@ -119,10 +116,16 @@ def histogram(data, path):
 
     for n in range(len(numeric_vars)):
         if rows == 1:
-            axs[j].set_title('Histogram for %s'%numeric_vars[n])
-            axs[j].set_xlabel(numeric_vars[n])
-            axs[j].set_ylabel("nr records")
-            axs[j].hist(data[numeric_vars[n]].dropna().values, 'auto')
+            if cols != 1:
+                axs[j].set_title('Histogram for %s'%numeric_vars[n])
+                axs[j].set_xlabel(numeric_vars[n])
+                axs[j].set_ylabel("nr records")
+                axs[j].hist(data[numeric_vars[n]].dropna().values, 'auto')
+            else:
+                axs.set_title('Histogram for %s'%numeric_vars[n])
+                axs.set_xlabel(numeric_vars[n])
+                axs.set_ylabel("nr records")
+                axs.hist(data[numeric_vars[n]].dropna().values, 'auto')
         else:
             axs[i, j].set_title('Histogram for %s'%numeric_vars[n])
             axs[i, j].set_xlabel(numeric_vars[n])
@@ -147,11 +150,15 @@ def histogram_with_trend(data, path):
     i, j = 0, 0
     for n in range(len(numeric_vars)):
         if rows == 1:
-            axs[j].set_title('Histogram with trend for %s'%numeric_vars[n])
-            distplot(data[numeric_vars[n]].dropna().values, norm_hist=True, ax=axs[j], axlabel=numeric_vars[n])
+            if cols != 1:
+                axs[j].set_title('Histogram with trend for %s'%numeric_vars[n])
+                displot(data[numeric_vars[n]].dropna().values, norm_hist=True, ax=axs[j], axlabel=numeric_vars[n])
+            else:
+                axs.set_title('Histogram with trend for %s'%numeric_vars[n])
+                displot(data[numeric_vars[n]].dropna().values, norm_hist=True, ax=axs, axlabel=numeric_vars[n])
         else:
             axs[i, j].set_title('Histogram with trend for %s'%numeric_vars[n])
-            distplot(data[numeric_vars[n]].dropna().values, norm_hist=True, ax=axs[i, j], axlabel=numeric_vars[n])
+            displot(data[numeric_vars[n]].dropna().values, norm_hist=True, ax=axs[i, j], axlabel=numeric_vars[n])
         i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
     plt.savefig(path)
     plt.show()
@@ -161,7 +168,51 @@ histogram_with_trend(air_data, "images/lab1/distribution/air_quality_histograms_
 # %%
 histogram_with_trend(collisions_data, "images/lab1/distribution/nyc_crashes_histograms_trend.png")
 #%%
-#TODO: Criar histogramas com o fit de varias distribuicoes diferentes.
+def compute_known_distributions(x_values: list) -> dict:
+    #!TODO: experimentar mais distribuicoes!!!!!!!!
+    distributions = dict()
+    # Gaussian
+    mean, sigma = norm.fit(x_values)
+    distributions['Normal(%.1f,%.2f)'%(mean,sigma)] = norm.pdf(x_values, mean, sigma)
+    # Exponential
+    loc, scale = expon.fit(x_values)
+    distributions['Exp(%.2f)'%(1/scale)] = expon.pdf(x_values, loc, scale)
+    # LogNorm
+    sigma, loc, scale = lognorm.fit(x_values)
+    distributions['LogNor(%.1f,%.2f)'%(np.log(scale),sigma)] = lognorm.pdf(x_values, sigma, loc, scale)
+    return distributions
+
+def histogram_with_distributions(ax: plt.Axes, series: pd.Series, var: str):
+    values = series.sort_values().values
+    ax.hist(values, 20, density=True)
+    distributions = compute_known_distributions(values)
+    multiple_line_chart(values, distributions, ax=ax, title='Best fit for %s'%var, xlabel=var, ylabel='')
+
+def fit_distributions(data, path):
+
+    numeric_vars = get_variable_types(data)['Numeric']
+    if [] == numeric_vars:
+        raise ValueError('There are no numeric variables.')
+
+    rows, cols = choose_grid(len(numeric_vars))
+    fig, axs = plt.subplots(rows, cols, figsize=(cols*HEIGHT, rows*HEIGHT), squeeze=False)
+    i, j = 0, 0
+    for n in range(len(numeric_vars)):
+        if rows == 1:
+            if cols != 1:
+                histogram_with_distributions(axs[j], data[numeric_vars[n]].dropna(), numeric_vars[n])
+            else:
+                histogram_with_distributions(axs, data[numeric_vars[n]].dropna(), numeric_vars[n])
+        else:
+            histogram_with_distributions(axs[i, j], data[numeric_vars[n]].dropna(), numeric_vars[n])
+        i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
+    plt.savefig(path)
+    plt.show()
+
+# %%
+fit_distributions(air_data, "images/lab1/distribution/air_quality_histograms_fits.png")
+# %%
+fit_distributions(collisions_data, "images/lab1/distribution/nyc_crashes_histograms_fits.png")
 #%%
 """
 ---------- SYMBOLIC VARIABLES ----------
@@ -187,6 +238,3 @@ sym_bars(collisions_data.drop(["PERSON_ID"], axis=1), "images/lab1/distribution/
 #%%
 #! Tive que apagar uma entrada com um "s" no GbCity para essa coluna nao contar como symbolic || Scratch that, a coluna fica sempre como object..?
 sym_bars(air_data.drop("GbCity", axis=1), "images/lab1/distribution/air_quality_syms.png")
-# %%
-air_data.dtypes
-# %%
