@@ -30,7 +30,6 @@ summary5_colls
 These have the intent of helping us visualize what the
 five-number summaries mean.
 """
-
 def boxplot(data, path):
     numeric_vars = get_variable_types(data)['Numeric']
     if [] == numeric_vars:
@@ -44,6 +43,15 @@ def boxplot(data, path):
         i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
     plt.savefig(path, dpi=300, bbox_inches='tight')
     plt.show()
+
+#%%
+air_data.boxplot(rot=45)
+plt.savefig("images/lab1/distribution/air_quality_boxplot_all.png", dpi=300, bbox_inches='tight')
+plt.show()
+#%%
+collisions_data.boxplot(rot=45)
+plt.savefig("images/lab1/distribution/nyc_crashes_boxplot_all.png", dpi=300, bbox_inches='tight')
+plt.show()
 # %%
 boxplot(air_data, "images/lab1/distribution/air_quality_boxplot.png")
 # %%
