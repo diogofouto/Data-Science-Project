@@ -135,46 +135,46 @@ def histogram_with_trend(data, path):
 histogram_with_trend(air_data, "images/lab1/distribution/air_quality_histograms_trend.png")
 # %%
 histogram_with_trend(collisions_data, "images/lab1/distribution/nyc_crashes_histograms_trend.png")
-#%%
-def compute_known_distributions(x_values: list) -> dict:
-    #? Devemos experimentar mais distribuicoes?
-    distributions = dict()
-    # Gaussian
-    mean, sigma = norm.fit(x_values)
-    distributions['Normal(%.1f,%.2f)'%(mean,sigma)] = norm.pdf(x_values, mean, sigma)
-    # Exponential
-    loc, scale = expon.fit(x_values)
-    distributions['Exp(%.2f)'%(1/scale)] = expon.pdf(x_values, loc, scale)
-    # LogNorm
-    sigma, loc, scale = lognorm.fit(x_values)
-    distributions['LogNor(%.1f,%.2f)'%(np.log(scale),sigma)] = lognorm.pdf(x_values, sigma, loc, scale)
-    return distributions
-
-def histogram_with_distributions(ax: plt.Axes, series: pd.Series, var: str):
-    values = series.sort_values().values
-    ax.hist(values, 20, density=True)
-    distributions = compute_known_distributions(values)
-    multiple_line_chart(values, distributions, ax=ax, title='Best fit for %s'%var, xlabel=var, ylabel='')
-
-def fit_distributions(data, path):
-
-    numeric_vars = get_variable_types(data)['Numeric']
-    if [] == numeric_vars:
-        raise ValueError('There are no numeric variables.')
-
-    rows, cols = choose_grid(len(numeric_vars))
-    fig, axs = plt.subplots(rows, cols, figsize=(cols*HEIGHT, rows*HEIGHT), squeeze=False)
-    i, j = 0, 0
-    for n in range(len(numeric_vars)):
-        histogram_with_distributions(axs[i, j], data[numeric_vars[n]].dropna(), numeric_vars[n])
-        i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
-    plt.savefig(path, dpi=300, bbox_inches='tight')
-    plt.show()
-
-# %%
-fit_distributions(air_data, "images/lab1/distribution/air_quality_histograms_fits.png")
-# %%
-fit_distributions(collisions_data, "images/lab1/distribution/nyc_crashes_histograms_fits.png")
+##%%
+#def compute_known_distributions(x_values: list) -> dict:
+#    #? Devemos experimentar mais distribuicoes?
+#    distributions = dict()
+#    # Gaussian
+#    mean, sigma = norm.fit(x_values)
+#    distributions['Normal(%.1f,%.2f)'%(mean,sigma)] = norm.pdf(x_values, mean, sigma)
+#    # Exponential
+#    loc, scale = expon.fit(x_values)
+#    distributions['Exp(%.2f)'%(1/scale)] = expon.pdf(x_values, loc, scale)
+#    # LogNorm
+#    sigma, loc, scale = lognorm.fit(x_values)
+#    distributions['LogNor(%.1f,%.2f)'%(np.log(scale),sigma)] = lognorm.pdf(x_values, sigma, loc, scale)
+#    return distributions
+#
+#def histogram_with_distributions(ax: plt.Axes, series: pd.Series, var: str):
+#    values = series.sort_values().values
+#    ax.hist(values, 20, density=True)
+#    distributions = compute_known_distributions(values)
+#    multiple_line_chart(values, distributions, ax=ax, title='Best fit for %s'%var, xlabel=var, ylabel='')
+#
+#def fit_distributions(data, path):
+#
+#    numeric_vars = get_variable_types(data)['Numeric']
+#    if [] == numeric_vars:
+#        raise ValueError('There are no numeric variables.')
+#
+#    rows, cols = choose_grid(len(numeric_vars))
+#    fig, axs = plt.subplots(rows, cols, figsize=(cols*HEIGHT, rows*HEIGHT), squeeze=False)
+#    i, j = 0, 0
+#    for n in range(len(numeric_vars)):
+#        histogram_with_distributions(axs[i, j], data[numeric_vars[n]].dropna(), numeric_vars[n])
+#        i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
+#    plt.savefig(path, dpi=300, bbox_inches='tight', format='png')
+#    plt.show()
+#
+## %%
+#fit_distributions(air_data, "images/lab1/distribution/air_quality_histograms_fits.png")
+## %%
+#fit_distributions(collisions_data, "images/lab1/distribution/nyc_crashes_histograms_fits.png")
 #%%
 """
 ---------- SYMBOLIC VARIABLES ----------
