@@ -25,7 +25,7 @@ def na_count_chart(data, path):
             mv[var] = nr
 
     bar_chart(list(mv.keys()), list(mv.values()), title='Nr of missing values per variable', xlabel='variables', ylabel='nr missing values', rotation=True)
-    plt.savefig(path)
+    plt.savefig(path, dpi=300, bbox_inchse='tight')
 
     return mv
 #%%
