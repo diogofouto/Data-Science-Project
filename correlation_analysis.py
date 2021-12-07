@@ -10,9 +10,9 @@ from ds_charts import get_variable_types, HEIGHT
 def get_correlations(data, name, path=None, ax=None):
 	if ax is None:
 		figure(figsize=[14, 14])
-	
+
 	corr_mtx = data.corr()
-	sns.heatmap(abs(corr_mtx),  ax=ax, linecolor=cfg.LINE_COLOR, xticklabels=corr_mtx.columns, yticklabels=corr_mtx.columns, cmap='Blues', fmt='.1f', annot=True)
+	sns.heatmap(abs(corr_mtx),  ax=ax, linecolor=cfg.LINE_COLOR, xticklabels=corr_mtx.columns, yticklabels=corr_mtx.columns, cmap='Blues', fmt='.2f', annot=True, annot_kws={"size": 6})
 	
 	if ax is None:
 		title(name)
