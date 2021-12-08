@@ -223,3 +223,15 @@ sym_bars(collisions_data, "images/lab1/distribution/nyc_crashes_syms.png")
 #%%
 #! Tive que apagar uma entrada com um "s" no GbCity para essa coluna nao contar como symbolic || Scratch that, a coluna fica sempre como object..?
 sym_bars(air_data.drop("GbCity", axis=1), "images/lab1/distribution/air_quality_syms.png")
+#%%
+counts = collisions_data["PERSON_INJURY"].value_counts()
+fig, ax = plt.subplots(figsize = (HEIGHT, HEIGHT))
+bar_chart(counts.index.to_list(), counts.values, ax=ax, title="Histogram for PERSON_INJURY", xlabel="PERSON_INJURY", ylabel='nr records', percentage=False)
+plt.savefig("images/lab1/distribution/nyc_crashes_class_bars.png", bbox_inches='tight')
+plt.show()
+# %%
+counts = air_data["ALARM"].value_counts()
+fig, ax = plt.subplots(figsize = (HEIGHT, HEIGHT))
+bar_chart(counts.index.to_list(), counts.values, ax=ax, title="Histogram for ALARM", xlabel="ALARM", ylabel='nr records', percentage=False)
+plt.savefig("images/lab1/distribution/air_quality_class_bars.png", bbox_inches='tight')
+plt.show()
