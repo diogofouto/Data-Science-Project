@@ -24,6 +24,29 @@ def get_correlations(data, name, path=None, ax=None):
 		ax.tick_params(axis='x', rotation=45)
 
 
+def get_class_correlations(data, clas, path):
+	variables = get_variable_types(data)['Numeric']
+	variables = [item for item in variables if 'ID' not in item]
+	if [] == variables:
+	    raise ValueError('There are no numeric variables.')
+
+	rows = len(variables)
+
+	fig, axs = subplots(rows, 1, figsize=(1*HEIGHT, rows*HEIGHT), squeeze=False)
+	for i in range(rows):
+		if 'ID' in variables[i]:
+			continue
+		axs[i, 0].set_title(clas + ' x ' + variables[i])
+		corr_mtx = data[clas].corr(data[variables[i]])
+		sns.heatmap([[abs(corr_mtx),],], ax=axs[i,0], xticklabels=False, yticklabels=False, linecolor=cfg.LINE_COLOR, cmap='Blues', fmt='.2f', annot=True, annot_kws={"size": 6})
+		axs[i, 0].set_xlabel(variables[i])
+		axs[i, 0].set_ylabel(clas)
+
+	tight_layout(h_pad=2)
+	savefig(path, dpi=300, bbox_inches="tight")
+	clf() # cleanup
+
+
 def main():
 	register_matplotlib_converters()
 
@@ -45,31 +68,15 @@ def main():
 	# ------- CORRELATION WITHIN CLASSES ------- #
 
 	# 'Air Quality'
-	air_quality_classes = {"EN": ["City_EN", "Prov_EN", "GbCity", "GbProv"], "CO": ["CO_Mean","CO_Min","CO_Max","CO_Std"],
-							"NO2": ["NO2_Mean","NO2_Min","NO2_Max","NO2_Std"], "O3": ["O3_Mean","O3_Min","O3_Max","O3_Std"],
-							"PM2.5": ["PM2.5_Mean","PM2.5_Min","PM2.5_Max","PM2.5_Std"], "PM10": ["PM10_Mean","PM10_Min","PM10_Max","PM10_Std"],
-							"SO2": ["SO2_Mean","SO2_Min","SO2_Max","SO2_Std"]}
-
-	# create dataframe and subplots
 	temp = pd.read_csv('data/air_quality_tabular.csv', index_col='FID', parse_dates=True, infer_datetime_format=True)
 	data = temp.apply(lambda x: pd.factorize(x)[0]) # Convert all var types to numerical
-	fig, axs = subplots(len(air_quality_classes), 1, figsize=(HEIGHT, len(air_quality_classes)*HEIGHT), squeeze=False)
-	
-	# get correlations
-	i = 0
-	for c in air_quality_classes:
-		temp = data.drop(columns=[col for col in data if col not in air_quality_classes[c]])
-		get_correlations(temp, 'Correlation Analysis for ' + c + '\n', ax=axs[i,0])
-		i=i+1
-
-	# save
-	tight_layout(h_pad=4)
-	savefig('images/lab1/correlation/air_quality_correlation_analysis_for_classes.png', dpi=300, bbox_inches="tight")
-	clf() # cleanup
-
+	get_class_correlations(data, 'ALARM', 'images/lab1/correlation/air_quality_correlation_analysis_for_class.png')
 
 	# 'NYC Collisions'
-	# todo
+	temp = pd.read_csv('data/NYC_collisions_tabular.csv', index_col='COLLISION_ID', parse_dates=True, infer_datetime_format=True)
+	data = temp.apply(lambda x: pd.factorize(x)[0]) # Convert all var types to numerical
+	get_class_correlations(data, 'PERSON_INJURY', 'images/lab1/correlation/NYC_collisions_correlation_analysis_for_class.png')
+
 
 
 if __name__ == '__main__':
