@@ -5,31 +5,10 @@ from ds_charts import get_variable_types
 from sklearn.preprocessing import OneHotEncoder
 from numpy import number
 
-def replace_date_with_ints(df, date_label):
-    df[date_label] = to_datetime(df[date_label], format="%d/%m/%Y").sub(Timestamp('2020-01-01')).dt.days
-    #df[date_label].apply(lambda x:x.toordinal())
-
-
 register_matplotlib_converters()
 
 AIR_QUALITY_FILE = "data/air_quality_tabular_mv_most_frequent.csv"
 COLLISIONS_FILE = "data/NYC_collisions_tabular_mv_most_frequent.csv"
-
-
-air_data = read_csv(AIR_QUALITY_FILE, na_values="", parse_dates=True, infer_datetime_format=True)
-#collisions_data = read_csv(COLLISIONS_FILE, na_values="", parse_dates=True, infer_datetime_format=True)
-
-# Drop out all records with missing values
-air_data.dropna(inplace=True)
-#collisions_data.dropna(inplace=True)
-
-# Clean air_data useless columns 
-air_data.drop(labels=['City_EN','Prov_EN'], axis=1,inplace=True)
-replace_date_with_ints(air_data, "date")
-air_data['GbCity'] = air_data['GbCity'].replace('s',value=0)
-air_data['GbCity'] = air_data['GbCity'].astype(int)
-print(air_data)
-
 
 def dummify(df, vars_to_dummify):
     other_vars = [c for c in df.columns if not c in vars_to_dummify]
@@ -55,9 +34,27 @@ def dummy(data, filename):
 
     return df
 
+#%% 
+# Air
+air_data = read_csv(AIR_QUALITY_FILE, na_values="", parse_dates=True, infer_datetime_format=True)
+
+# Clean air_data useless columns and missing values
+air_data.dropna(inplace=True)
+air_data.drop(labels=['City_EN','Prov_EN'], axis=1,inplace=True)
+air_data['GbCity'] = air_data['GbCity'].replace('s',value=0)
+air_data['GbCity'] = air_data['GbCity'].astype(int)
+air_data["date"] = to_datetime(air_data["date"], format="%d/%m/%Y").sub(Timestamp('2020-01-01')).dt.days
+
+#%% 
+# Collisions
+collisions_data = read_csv(COLLISIONS_FILE, na_values="", parse_dates=True, infer_datetime_format=True)
+
+# Clean collision useless columns and missing values
+collisions_data.dropna(inplace=True)
+
 #%%
-#dummified_collision_data = dummy(collisions_data, "NYC_collisions_tabular")
-#dummified_collision_data.describe(include=[bool])
+dummified_collision_data = dummy(collisions_data, "NYC_collisions_tabular")
+dummified_collision_data.describe(include=[bool])
 
 #%%
 dummified_air_data = dummy(air_data, "air_quality_tabular")
