@@ -16,8 +16,8 @@ register_matplotlib_converters()
 air_data = pd.read_csv(AIR_QUALITY_FILE, index_col="FID", parse_dates=True, infer_datetime_format=True)
 collisions_data = pd.read_csv(COLLISIONS_FILE, index_col="COLLISION_ID", parse_dates=True, infer_datetime_format=True)
 air_data[air_data['GbCity'] == 's'] = np.nan
+air_data['GbCity'] = pd.to_numeric(air_data['GbCity'])
 collisions_data.loc[(collisions_data['PERSON_AGE'] < 0) | (collisions_data['PERSON_AGE'] > 130), "PERSON_AGE"] = np.nan
-
 #%%
 def na_count_chart(data, path):
     mv = {}
@@ -118,6 +118,5 @@ air_data_filled.describe(include='all')
 #%%
 #%%
 coll_data_filled = fill_missing_values(collisions_data, COL_FNAME)
-collisions_data.describe(include='all')
-#%%
 coll_data_filled.describe(include='all')
+#%%
