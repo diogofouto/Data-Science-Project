@@ -15,6 +15,9 @@ register_matplotlib_converters()
 
 air_data = pd.read_csv(AIR_QUALITY_FILE, index_col="FID", parse_dates=True, infer_datetime_format=True)
 collisions_data = pd.read_csv(COLLISIONS_FILE, index_col="COLLISION_ID", parse_dates=True, infer_datetime_format=True)
+air_data[air_data['GbCity'] == 's'] = np.nan
+collisions_data.loc[(collisions_data['PERSON_AGE'] < 0) | (collisions_data['PERSON_AGE'] > 130), "PERSON_AGE"] = np.nan
+
 #%%
 def na_count_chart(data, path):
     mv = {}
@@ -46,7 +49,7 @@ def mv_drop_vars(data, mv, file):
 
     missings = [c for c in mv.keys() if mv[c] > threshold]
     df = data.drop(columns=missings, inplace=False)
-    df.to_csv(f'data/{file}_drop_columns_mv.csv', index=True)
+    df.to_csv(f'data/{file}_drop_columns_mv.csv', index=False)
     print('Dropped variables', missings)
 #%%
 mv_drop_vars(air_data, air_mvs, AQ_FNAME)
@@ -63,7 +66,7 @@ def mv_drop_recs(data, file):
     threshold = data.shape[1] * 0.50
 
     df = data.dropna(thresh=threshold, inplace=False)
-    df.to_csv(f'data/{file}_drop_records_mv.csv', index=True)
+    df.to_csv(f'data/{file}_drop_records_mv.csv', index=False)
     print("After: " + str(df.shape))
 #%%
 mv_drop_recs(air_data, AQ_FNAME)
@@ -106,14 +109,13 @@ def fill_missing_values(data, file):
         tmp_bool = pd.DataFrame(imp.fit_transform(data[binary_vars]), columns=binary_vars)
 
     df = pd.concat([tmp_nr, tmp_sb, tmp_bool], axis=1)
-    df.to_csv(f'data/{file}_mv_most_frequent.csv', index=True)
+    df.to_csv(f'data/{file}_mv_most_frequent.csv')
     return df
 
 #%%
 air_data_filled = fill_missing_values(air_data, AQ_FNAME)
-air_data.describe(include='all')
-#%%
 air_data_filled.describe(include='all')
+#%%
 #%%
 coll_data_filled = fill_missing_values(collisions_data, COL_FNAME)
 collisions_data.describe(include='all')
