@@ -8,7 +8,7 @@ from numpy import number
 register_matplotlib_converters()
 
 AIR_QUALITY_FILE = "data/air_quality_tabular_mv_most_frequent.csv"
-COLLISIONS_FILE = "data/NYC_collisions_tabular_mv_most_frequent.csv"
+COLLISIONS_FILE = "data/NYC_collisions_tabular_mv_most_frequent_taxonomized.csv"
 
 def dummify(df, vars_to_dummify):
     other_vars = [c for c in df.columns if not c in vars_to_dummify]
@@ -51,6 +51,10 @@ collisions_data = read_csv(COLLISIONS_FILE, na_values="", parse_dates=True, infe
 
 # Clean collision useless columns and missing values
 collisions_data.dropna(inplace=True)
+collisions_data["CRASH_DATE"] = to_datetime(collisions_data["CRASH_DATE"], format="%d/%m/%Y").sub(Timestamp('2020-01-01')).dt.days
+collisions_data["CRASH_TIME"] = to_datetime(collisions_data["CRASH_TIME"], format="%H:%M").dt.hour
+collisions_data.drop(labels=['PERSON_ID','ID','UNIQUE_ID', 'VEHICLE_ID','Unnamed'], axis=1,inplace=True)
+print(collisions_data)
 
 #%%
 dummified_collision_data = dummy(collisions_data, "NYC_collisions_tabular")
@@ -59,3 +63,7 @@ dummified_collision_data.describe(include=[bool])
 #%%
 dummified_air_data = dummy(air_data, "air_quality_tabular")
 dummified_air_data.describe(include=[bool])
+# %%
+
+print(get_variable_types(collisions_data)['Symbolic'])
+# %%

@@ -40,7 +40,7 @@ def create_encoding_columns(data):
 	data['SAFETY_EQUIPMENT_ENCODING'] = data.apply(lambda row: get_encoding(row['SAFETY_EQUIPMENT'], safety_equipment), axis=1)
 	data['BODILY_INJURY_ENCODING'] = data.apply(lambda row: get_encoding(row['BODILY_INJURY'], bodily_injury), axis=1)
 	data['PERSON_SEX_ENCODING'] = data.apply(lambda row: get_encoding(row['PERSON_SEX'], person_sex), axis=1)
-
+	data.drop(labels=['SAFETY_EQUIPMENT','BODILY_INJURY','PERSON_SEX'], axis=1,inplace=True)
 
 def print_unique_symbolic_values(data):
 	variables = get_variable_types(data)['Symbolic']
@@ -79,12 +79,14 @@ def main():
 
 
 	# 'NYC Collisions'
-	data = pd.read_csv('data/NYC_collisions_tabular.csv', index_col='COLLISION_ID', parse_dates=True, infer_datetime_format=True)
+	data = pd.read_csv('data/NYC_collisions_tabular_mv_most_frequent.csv', parse_dates=True, infer_datetime_format=True)
 	#print_unique_symbolic_values(data)
 	create_encoding_columns(data)
 	print(data['SAFETY_EQUIPMENT_ENCODING'])
 	print(data['BODILY_INJURY_ENCODING'])
 	print(data['PERSON_SEX_ENCODING'])
+	
+	data.to_csv(f'data/NYC_collisions_tabular_mv_most_frequent_taxonomized.csv', index=True)
 
 
 
