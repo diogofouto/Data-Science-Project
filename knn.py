@@ -28,10 +28,8 @@ def make_train_test_sets(filename, target):
     return X_train, X_test, y_train, y_test, labels
 
 def knn_variants(X_train, X_test, y_train, y_test, file_tag):
-    #nvalues = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
-    #dist = ['manhattan', 'euclidean', 'chebyshev']
-    nvalues=[1]
-    dist = ['manhattan']
+    nvalues = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
+    dist = ['manhattan', 'euclidean', 'chebyshev']
     values = {}
     best = (0, '')
     last_best = 0
