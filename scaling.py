@@ -13,6 +13,9 @@ def scale(data, file, output_path):
 	symbolic_vars = variables['Symbolic']
 	boolean_vars = variables['Binary']
 
+	data_sb = pd.DataFrame()
+	data_bool = pd.DataFrame()
+
 	if [] != numeric_vars:
 		data_nr = data[numeric_vars]
 	else:
@@ -63,11 +66,11 @@ def main():
 	register_matplotlib_converters()
 
 	# 'Air Quality'
-	data = pd.read_csv('data/air_quality_tabular.csv', index_col='FID', na_values='', parse_dates=True, infer_datetime_format=True)
+	data = pd.read_csv('data/air_quality_tabular_dummified.csv', parse_dates=True, infer_datetime_format=True)
 	scale(data, 'air_quality', 'images/lab3/scaling/air_quality_scaling.png')
 
 	# 'NYC Collisions'
-	data = pd.read_csv('data/NYC_collisions_tabular.csv', index_col='COLLISION_ID', na_values='', parse_dates=True, infer_datetime_format=True)
+	data = pd.read_csv('data/NYC_collisions_tabular_dummified.csv', parse_dates=True, infer_datetime_format=True)
 	scale(data, 'NYC_collisions', 'images/lab3/scaling/NYC_collisions_scaling.png')
 
 
