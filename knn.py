@@ -15,19 +15,25 @@ NYC_FILENAME = 'data/NYC_collisions_tabular_dummified'
 NYC_FILETAG = 'NYC_collisions_tabular'
 NYC_TARGET = 'PERSON_INJURY'
 
-def make_train_test_sets(filename, target):
+def make_train_test_sets(filename, file_tag, target):
     data: pd.DataFrame = pd.read_csv(f'data/{filename}.csv', parse_dates=True, infer_datetime_format=True)
 
+    X: np.ndarray = data.drop(columns=[target])
     y: np.ndarray = data.pop(target).values
-    X: np.ndarray = data.values
     labels: np.ndarray = pd.unique(y)
     labels.sort()
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.7, stratify=y)
+    trnX, tstX, trnY, tstY = train_test_split(X, y, train_size=0.7, stratify=y)
+    train = pd.concat([pd.DataFrame(trnX, columns=data.columns), pd.DataFrame(trnY,columns=[target])], axis=1)
+    train.to_csv(f'data/{file_tag}_train.csv', index=False)
 
-    return X_train, X_test, y_train, y_test, labels
+    test = pd.concat([pd.DataFrame(tstX, columns=data.columns), pd.DataFrame(tstY,columns=[target])], axis=1)
+    test.to_csv(f'data/{file_tag}_test.csv', index=False)
 
-def knn_variants(X_train, X_test, y_train, y_test, file_tag):
+    return trnX, tstX, trnY, tstY, labels
+
+
+def knn_variants(trnX, tstX, trnY, tstY):
     nvalues = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
     dist = ['manhattan', 'euclidean', 'chebyshev']
     values = {}
@@ -38,9 +44,9 @@ def knn_variants(X_train, X_test, y_train, y_test, file_tag):
         for n in nvalues:
             print("-- variant: ({}, {}) --".format(n, d))
             knn = KNeighborsClassifier(n_neighbors=n, metric=d)
-            knn.fit(X_train, y_train)
-            prdY = knn.predict(X_test)
-            yvalues.append(accuracy_score(y_test, prdY))
+            knn.fit(trnX, trnY)
+            prdY = knn.predict(tstX)
+            yvalues.append(accuracy_score(tstY, prdY))
             if yvalues[-1] > last_best:
                 best = (n, d)
                 last_best = yvalues[-1]
@@ -49,41 +55,40 @@ def knn_variants(X_train, X_test, y_train, y_test, file_tag):
     plt.figure()
     multiple_line_chart(nvalues, values, title='KNN variants', xlabel='n', ylabel='accuracy', percentage=True)
     print("-- plotted. now saving --")
-    plt.savefig(f'images/lab3/knn/{file_tag}_knn_study.png')
+    plt.savefig('images/lab3/knn/{file_tag}_knn_study.png')
     print('Best results with %d neighbors and %s'%(best[0], best[1]))
 
     return best
 
-def knn_performance(n_neighs, metric, X_train, X_test, y_train, y_test, labels, file_tag):
+def knn_performance(n_neighs, metric, trnX, trnY, tstX, tstY, labels):
     clf = KNeighborsClassifier(n_neighbors=n_neighs, metric=metric)
-    clf.fit(X_train, y_train)
 
-    prd_trn = clf.predict(X_train)
-    prd_tst = clf.predict(X_test)
-
+    clf.fit(trnX, trnY)
+    prd_trn = clf.predict(trnX)
+    prd_tst = clf.predict(tstX)
     print("-- plotting --")
-    plot_evaluation_results(labels, y_train, prd_trn, y_test, prd_tst)
+    plot_evaluation_results(labels, trnY, prd_trn, tstY, prd_tst)
     print("-- plotted. now saving --")
-    plt.savefig(f'images/lab3/knn/{file_tag}_knn_best.png')
+    plt.savefig('images/lab3/knn/{file_tag}_knn_best.png')
 
 def main():
 
-    for (filename, filetag, target) in [('air_quality_tabular_dummified',       'air_quality_noscaling',    AQ_TARGET),
-                                        ('NYC_collisions_tabular_dummified',    'NYC_collisions_noscaling', NYC_TARGET),
-                                        ('air_quality_scaled_zscore',           'air_quality_zscore',       AQ_TARGET),
-                                        ('NYC_collisions_scaled_zscore',        'NYC_collisions_zscore',    NYC_TARGET),
-                                        ('air_quality_scaled_minmax',           'air_quality_minmax',       AQ_TARGET),
-                                        ('NYC_collisions_scaled_minmax',        'NYC_collisions_minmax',    NYC_TARGET)]:
+    for (filename, filetag) in [('air_quality_tabular_dummified', 'air_quality_noscaling'),
+                                ('NYC_collisions_tabular_dummified', 'NYC_collisions_noscaling'),
+                                ('air_quality_scaled_zscore', 'air_quality_zscore'),
+                                ('NYC_collisions_scaled_zscore', 'NYC_collisions_zscore'),
+                                ('air_quality_scaled_minmax', 'air_quality_minmax'),
+                                ('NYC_collisions_scaled_minmax', 'NYC_collisions_minmax')]:
 
         print("current: ", filename, filetag)
 
-        X_train, X_test, y_train, y_test, labels = make_train_test_sets(filename, target)
+        trnX, tstX, trnY, tstY, labels = make_train_test_sets(filename, filetag, AQ_TARGET)
 
         print("- knn_variants start -")
-        best = knn_variants(X_train, X_test, y_train, y_test, filetag)
+        best = knn_variants(trnX, tstX, trnY, tstY)
 
         print("- knn_performance start -")
-        knn_performance(best[0], best[1], X_train, X_test, y_train, y_test, labels, filetag)
+        knn_performance(best[0], best[1], trnX, tstX, trnY, tstY, labels)
 
         print("! done !")
 
