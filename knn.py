@@ -71,19 +71,19 @@ def knn_performance(n_neighs, metric, X_train, X_test, y_train, y_test, labels, 
 
 def main():
 
-    for (filename, filetag, target) in [('air_quality_tabular_dummified',       'air_quality_noscaling',    AQ_TARGET),
-                                        ('NYC_collisions_tabular_dummified',    'NYC_collisions_noscaling', NYC_TARGET),
-                                        ('air_quality_scaled_zscore',           'air_quality_zscore',       AQ_TARGET),
-                                        ('NYC_collisions_scaled_zscore',        'NYC_collisions_zscore',    NYC_TARGET),
-                                        ('air_quality_scaled_minmax',           'air_quality_minmax',       AQ_TARGET),
-                                        ('NYC_collisions_scaled_minmax',        'NYC_collisions_minmax',    NYC_TARGET)]:
+    for (filename, filetag, target, neighs) in [('air_quality_tabular_dummified',       'air_quality_noscaling',    AQ_TARGET,  AQ_NEIGHS),
+                                                ('NYC_collisions_tabular_dummified',    'NYC_collisions_noscaling', NYC_TARGET, NYC_NEIGHS),
+                                                ('air_quality_scaled_zscore',           'air_quality_zscore',       AQ_TARGET,  AQ_NEIGHS),
+                                                ('NYC_collisions_scaled_zscore',        'NYC_collisions_zscore',    NYC_TARGET, NYC_NEIGHS),
+                                                ('air_quality_scaled_minmax',           'air_quality_minmax',       AQ_TARGET,  AQ_NEIGHS),
+                                                ('NYC_collisions_scaled_minmax',        'NYC_collisions_minmax',    NYC_TARGET, NYC_NEIGHS)]:
 
         print("current: ", filename, filetag)
 
         X_train, X_test, y_train, y_test, labels = make_train_test_sets(filename, target)
 
         print("- knn_variants start -")
-        best = knn_variants(X_train, X_test, y_train, y_test, filetag)
+        best = knn_variants(X_train, X_test, y_train, y_test, filetag, nvalues=neighs)
 
         print("- knn_performance start -")
         knn_performance(best[0], best[1], X_train, X_test, y_train, y_test, labels, filetag)
