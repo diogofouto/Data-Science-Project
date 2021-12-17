@@ -87,9 +87,9 @@ def knn_variants(X_train, X_test, y_train, y_test, file_tag, nvalues):
         return last_best, best
 
 
-    best, last_best = normal_versions(last_best)
+    last_best, best = normal_versions(last_best)
     print(best, last_best)
-    best, last_best = weighted_versions(last_best)
+    last_best, best = weighted_versions(last_best)
     print(best, last_best)
 
     plt.figure()
