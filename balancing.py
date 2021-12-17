@@ -18,15 +18,15 @@ def class_balance(data, class_var, output_file):
 
     figure()
     bar_chart(target_count.index, target_count.values, title='Class balance')
-    savefig(f'images/{output_file}_balance.png')
+    savefig(f'images/lab4/balancing/{output_file}_balance.png')
     show()
 
     return values, positive_class, negative_class
 
 #%%
-AIR_QUALITY_FILE = "data/air_quality_tabular.csv"
+AIR_QUALITY_FILE = "data/air_quality_scaled_zscore.csv"
 AIR_CLASS = "ALARM"
-COLLISIONS_FILE = "data/NYC_collisions_tabular.csv"
+COLLISIONS_FILE = "data/NYC_collisions_scaled_minmax.csv"
 COLLISIONS_CLASS = "PERSON_INJURY"
 
 air_data = read_csv(AIR_QUALITY_FILE, na_values="", parse_dates=True, infer_datetime_format=True)
@@ -85,19 +85,19 @@ def smote(data, class_var, values, positive_class, negative_class,output_file):
     return df_smote
 
 #%% USE EACH STRATEGY TO COUNTER BALANCE
-undersample(values_air, positive_class_air, negative_class_air, df_negatives_air, df_negatives_col, "air_quality_tabular")
-oversample(values_air, positive_class_air, negative_class_air, df_negatives_air, df_negatives_col, "air_quality_tabular")
+undersample(values_air, positive_class_air, negative_class_air, df_negatives_air, df_positives_air, "air_quality_tabular")
+oversample(values_air, positive_class_air, negative_class_air, df_negatives_air, df_positives_air, "air_quality_tabular")
 smote(air_data,AIR_CLASS, values_air, positive_class_air, negative_class_air, "air_quality_tabular")
 figure()
 multiple_bar_chart([positive_class_air, negative_class_air], values_air, title='Target', xlabel='frequency', ylabel='Class balance')
-savefig(f'images/air_quality_balancing_techniques.png')
+savefig(f'images/lab4/balancing/air_quality_balancing_techniques.png')
 show()
 # %%
-undersample(values_col, positive_class_col, negative_class_col, df_negatives_col, df_negatives_col, "NYC_collisions_tabular")
-oversample(values_col, positive_class_col, negative_class_col, df_negatives_col, df_negatives_col, "NYC_collisions_tabular")
+undersample(values_col, positive_class_col, negative_class_col, df_negatives_col, df_positives_col, "NYC_collisions_tabular")
+oversample(values_col, positive_class_col, negative_class_col, df_negatives_col, df_positives_col, "NYC_collisions_tabular")
 smote(collisions_data,COLLISIONS_CLASS, values_col, positive_class_col, negative_class_col, "NYC_collisions_tabular")
 figure()
 multiple_bar_chart([positive_class_col, negative_class_col], values_col, title='Target', xlabel='frequency', ylabel='Class balance')
-savefig(f'images/NYC_collisions_balancing_techniques.png')
+savefig(f'images/lab4/balancing/NYC_collisions_balancing_techniques.png')
 show()
 # %%
