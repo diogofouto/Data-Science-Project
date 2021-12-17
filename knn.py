@@ -32,22 +32,60 @@ def make_train_test_sets(filename, target):
     return X_train, X_test, y_train, y_test, labels
 
 def knn_variants(X_train, X_test, y_train, y_test, file_tag, nvalues):
-    dist = ['manhattan', 'euclidean', 'seuclidean', 'chebyshev', 'minkowsky', 'wminkowsky', 'mahalanobis']
     values = {}
-    best = (0, '')
-    last_best = 0
-    for d in dist:
+
+    def normal_versions(last_best):
+        dist = ['manhattan', 'euclidean', 'chebyshev']
+        for d in dist:
+            yvalues = []
+            for n in nvalues:
+                print("-- variant: ({}, {}) --".format(n, d))
+                knn = KNeighborsClassifier(n_neighbors=n, metric=d)
+                knn.fit(X_train, y_train)
+                prdY = knn.predict(X_test)
+                yvalues.append(accuracy_score(y_test, prdY))
+                if yvalues[-1] > last_best:
+                    best = (n, d)
+                    last_best = yvalues[-1]
+            values[d] = yvalues
+
+        return last_best, best
+
+    def weighted_versions(last_best):
+        wdist = ['wmanhattan', 'weuclidean']
+        for (ix, d) in zip(range(len(wdist)), wdist):
+            yvalues = []
+            for n in nvalues:
+                print("-- variant: ({}, {}) --".format(n, d))
+                print("-- p: ", ix + 1)
+                knn = KNeighborsClassifier(weights='distance', n_neighbors=n, p=ix + 1)
+                knn.fit(X_train, y_train)
+                prdY = knn.predict(X_test)
+                yvalues.append(accuracy_score(y_test, prdY))
+                if yvalues[-1] > last_best:
+                    best = (n, d)
+                    last_best = yvalues[-1]
+            values[d] = yvalues
+        
         yvalues = []
         for n in nvalues:
-            print("-- variant: ({}, {}) --".format(n, d))
-            knn = KNeighborsClassifier(n_neighbors=n, metric=d)
+            print("-- variant: ({}, wchebyshev) --".format(n))
+            knn = KNeighborsClassifier(weights='distance', metric='chebyshev', n_neighbors=n)
             knn.fit(X_train, y_train)
             prdY = knn.predict(X_test)
             yvalues.append(accuracy_score(y_test, prdY))
             if yvalues[-1] > last_best:
-                best = (n, d)
+                best = (n, 'wchebyshev')
                 last_best = yvalues[-1]
-        values[d] = yvalues
+            values['wchebyshev'] = yvalues
+
+        return last_best, best
+
+    best = (0, '')
+    last_best = 0
+
+    last_best, best = normal_versions(last_best)
+    last_best, best = weighted_versions(last_best)
 
     plt.figure()
     multiple_line_chart(nvalues, values, title='KNN variants', xlabel='n', ylabel='accuracy', percentage=True)
@@ -58,7 +96,17 @@ def knn_variants(X_train, X_test, y_train, y_test, file_tag, nvalues):
     return best
 
 def knn_performance(n_neighs, metric, X_train, X_test, y_train, y_test, labels, file_tag):
-    clf = KNeighborsClassifier(n_neighbors=n_neighs, metric=metric)
+    clf = None
+    
+    if metric == 'wmanhattan':
+        clf = KNeighborsClassifier(weights='distance', n_neighbors=n_neighs, p = 1)
+    elif metric == 'weuclidean':
+        clf = KNeighborsClassifier(weights='distance', n_neighbors=n_neighs, p = 2)
+    elif metric == 'wchebyshev':
+        clf = KNeighborsClassifier(weights='distance', n_neighbors=n_neighs, metric='chebyshev')
+    else:
+        clf = KNeighborsClassifier(n_neighbors=n_neighs, metric=metric)
+
     clf.fit(X_train, y_train)
 
     prd_trn = clf.predict(X_train)
