@@ -33,8 +33,11 @@ def make_train_test_sets(filename, target):
 
 def knn_variants(X_train, X_test, y_train, y_test, file_tag, nvalues):
     values = {}
+    last_best = 0
 
     def normal_versions(last_best):
+        best = (0, '')
+
         dist = ['manhattan', 'euclidean', 'chebyshev']
         for d in dist:
             yvalues = []
@@ -52,6 +55,8 @@ def knn_variants(X_train, X_test, y_train, y_test, file_tag, nvalues):
         return last_best, best
 
     def weighted_versions(last_best):
+        best = (0, '')
+
         wdist = ['wmanhattan', 'weuclidean']
         for (ix, d) in zip(range(len(wdist)), wdist):
             yvalues = []
@@ -81,11 +86,11 @@ def knn_variants(X_train, X_test, y_train, y_test, file_tag, nvalues):
 
         return last_best, best
 
-    best = (0, '')
-    last_best = 0
 
-    last_best, best = normal_versions(last_best)
-    last_best, best = weighted_versions(last_best)
+    best, last_best = normal_versions(last_best)
+    print(best, last_best)
+    best, last_best = weighted_versions(last_best)
+    print(best, last_best)
 
     plt.figure()
     multiple_line_chart(nvalues, values, title='KNN variants', xlabel='n', ylabel='accuracy', percentage=True)
@@ -97,7 +102,7 @@ def knn_variants(X_train, X_test, y_train, y_test, file_tag, nvalues):
 
 def knn_performance(n_neighs, metric, X_train, X_test, y_train, y_test, labels, file_tag):
     clf = None
-    
+
     if metric == 'wmanhattan':
         clf = KNeighborsClassifier(weights='distance', n_neighbors=n_neighs, p = 1)
     elif metric == 'weuclidean':
