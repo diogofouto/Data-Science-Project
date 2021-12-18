@@ -34,10 +34,9 @@ def make_train_test_sets(filename, target):
 def knn_variants(X_train, X_test, y_train, y_test, file_tag, nvalues):
     values = {}
     last_best = 0
+    best = (0, '')
 
-    def normal_versions(last_best):
-        best = (0, '')
-
+    def normal_versions(best, last_best):
         dist = ['manhattan', 'euclidean', 'chebyshev']
         for d in dist:
             yvalues = []
@@ -54,9 +53,7 @@ def knn_variants(X_train, X_test, y_train, y_test, file_tag, nvalues):
 
         return last_best, best
 
-    def weighted_versions(last_best):
-        best = (0, '')
-
+    def weighted_versions(best, last_best):
         wdist = ['wmanhattan', 'weuclidean']
         for (ix, d) in zip(range(len(wdist)), wdist):
             yvalues = []
@@ -86,11 +83,8 @@ def knn_variants(X_train, X_test, y_train, y_test, file_tag, nvalues):
 
         return last_best, best
 
-
-    last_best, best = normal_versions(last_best)
-    print(best, last_best)
-    last_best, best = weighted_versions(last_best)
-    print(best, last_best)
+    last_best, best = normal_versions(best, last_best)
+    last_best, best = weighted_versions(best, last_best)
 
     plt.figure()
     multiple_line_chart(nvalues, values, title='KNN variants', xlabel='n', ylabel='accuracy', percentage=True)
