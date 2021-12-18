@@ -90,12 +90,12 @@ def nb_performance(best, X_train, X_test, y_train, y_test, labels, file_tag):
 def main():
 	register_matplotlib_converters()
 
-	for (filename, filetag, target) in [('air_quality_tabular_dummified', 'air_quality_noscaling', AQ_TARGET),
-								('NYC_collisions_tabular_dummified', 'NYC_collisions_noscaling', NYC_TARGET),
-								('air_quality_scaled_zscore', 'air_quality_zscore', AQ_TARGET),
-								('NYC_collisions_scaled_zscore', 'NYC_collisions_zscore', NYC_TARGET),
-								('air_quality_scaled_minmax', 'air_quality_minmax', AQ_TARGET),
-								('NYC_collisions_scaled_minmax', 'NYC_collisions_minmax', NYC_TARGET)]:
+	for (filename, filetag, target) in [('air_quality_tabular_over', 'air_quality_over', AQ_TARGET),
+								('NYC_collisions_tabular_over', 'NYC_collisions_over', NYC_TARGET),
+								('air_quality_tabular_smote', 'air_quality_smote', AQ_TARGET),
+								('NYC_collisions_tabular_smote', 'NYC_collisions_smote', NYC_TARGET),
+								('air_quality_tabular_under', 'air_quality_under', AQ_TARGET),
+								('NYC_collisions_tabular_under', 'NYC_collisions_under', NYC_TARGET)]:
 
 		X_train, X_test, y_train, y_test, labels = make_train_test_sets(filename, target)
 
