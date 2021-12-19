@@ -21,7 +21,7 @@ estimators = {'GaussianNB': GaussianNB(),
 
 
 def make_train_test_sets(filename, target):
-	data: pd.DataFrame = pd.read_csv(f'data/{filename}.csv', parse_dates=True, infer_datetime_format=True)
+	data: pd.DataFrame = pd.read_csv(f'data/{filename}.csv')
 
 	y: np.ndarray = data.pop(target).values
 	X: np.ndarray = data.values
@@ -90,12 +90,12 @@ def nb_performance(best, X_train, X_test, y_train, y_test, labels, file_tag):
 def main():
 	register_matplotlib_converters()
 
-	for (filename, filetag, target) in [('air_quality_tabular_over', 'air_quality_over', AQ_TARGET),
-								('NYC_collisions_tabular_over', 'NYC_collisions_over', NYC_TARGET),
-								('air_quality_tabular_smote', 'air_quality_smote', AQ_TARGET),
-								('NYC_collisions_tabular_smote', 'NYC_collisions_smote', NYC_TARGET),
-								('air_quality_tabular_under', 'air_quality_under', AQ_TARGET),
-								('NYC_collisions_tabular_under', 'NYC_collisions_under', NYC_TARGET)]:
+	for (filename, filetag, target) in [('air_quality_train_over', 'air_quality_over', AQ_TARGET),
+								('NYC_collisions_train_over', 'NYC_collisions_over', NYC_TARGET),
+								('air_quality_train_smote', 'air_quality_smote', AQ_TARGET),
+								('NYC_collisions_train_smote', 'NYC_collisions_smote', NYC_TARGET),
+								('air_quality_train_under', 'air_quality_under', AQ_TARGET),
+								('NYC_collisions_train_under', 'NYC_collisions_under', NYC_TARGET)]:
 
 		X_train, X_test, y_train, y_test, labels = make_train_test_sets(filename, target)
 
