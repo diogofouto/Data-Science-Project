@@ -118,12 +118,12 @@ def knn_performance(n_neighs, metric, X_train, X_test, y_train, y_test, labels, 
 
 def main():
 
-    for (filename, filetag, target, neighs) in [('air_quality_tabular_dummified',       'air_quality_noscaling',    AQ_TARGET,  AQ_NEIGHS),
-                                                ('NYC_collisions_tabular_dummified',    'NYC_collisions_noscaling', NYC_TARGET, NYC_NEIGHS),
-                                                ('air_quality_scaled_zscore',           'air_quality_zscore',       AQ_TARGET,  AQ_NEIGHS),
-                                                ('NYC_collisions_scaled_zscore',        'NYC_collisions_zscore',    NYC_TARGET, NYC_NEIGHS),
-                                                ('air_quality_scaled_minmax',           'air_quality_minmax',       AQ_TARGET,  AQ_NEIGHS),
-                                                ('NYC_collisions_scaled_minmax',        'NYC_collisions_minmax',    NYC_TARGET, NYC_NEIGHS)]:
+    for (filename, filetag, target, neighs) in [('air_quality_tabular_over',       'air_quality_over',    AQ_TARGET,  AQ_NEIGHS),
+                                                ('NYC_collisions_tabular_over',    'NYC_collisions_over', NYC_TARGET, NYC_NEIGHS),
+                                                ('air_quality_tabular_smote',           'air_quality_smote',       AQ_TARGET,  AQ_NEIGHS),
+                                                ('NYC_collisions_tabular_smote',        'NYC_collisions_smote',    NYC_TARGET, NYC_NEIGHS),
+                                                ('air_quality_tabular_under',           'air_quality_under',       AQ_TARGET,  AQ_NEIGHS),
+                                                ('NYC_collisions_tabular_under',        'NYC_collisions_under',    NYC_TARGET, NYC_NEIGHS)]:
 
         print("current: ", filename, filetag)
 
