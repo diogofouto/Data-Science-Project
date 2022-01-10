@@ -5,11 +5,8 @@ from sklearn.metrics import accuracy_score
 
 from utils import *
 
-AQ_DEPTHS = [2, 5, 10, 15, 20, 25, 30]
-NYC_DEPTHS = [2, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
-
-def random_forests_study(X_train, y_train, X_test, y_test, max_depths, file_tag):
-    n_estimators = [5, 10, 25, 50, 75, 100, 150, 200, 250, 300]
+def random_forests_study(X_train, y_train, X_test, y_test, max_depths, file_tag, min_imp):
+    n_estimators = [i for i in range(50, 550, 50)]
     max_features = [.1, .3, .5, .7, .9, 1]
     best = ('', 0, 0)
     last_best = 0
@@ -27,7 +24,7 @@ def random_forests_study(X_train, y_train, X_test, y_test, max_depths, file_tag)
             yvalues = []
             for n in n_estimators:
                 print(f"---- Nr. Estimators: {n}")
-                rf = RandomForestClassifier(n_estimators=n, max_depth=d, max_features=f)
+                rf = RandomForestClassifier(criterion='entropy', n_estimators=n, max_depth=d, max_features=f, min_impurity_decrease=min_imp)
                 rf.fit(X_train, y_train)
                 y_pred = rf.predict(X_test)
                 yvalues.append(accuracy_score(y_test, y_pred))
@@ -60,12 +57,12 @@ def plot_feature_importance(best_model, train, file_tag):
     plt.savefig(f'images/lab6/{file_tag}_rf_ranking.png')
 
 def main():
-    for filename, file_tag, target, max_depths in [(AQ_FILENAME, AQ_FILETAG, AQ_TARGET, AQ_DEPTHS),
-                                                    (NYC_FILENAME, NYC_FILETAG, NYC_TARGET, NYC_DEPTHS)]:
+    for filename, file_tag, target, max_depths in [(AQ_FILENAME, AQ_FILETAG, AQ_TARGET, [10]),
+                                                    (NYC_FILENAME, NYC_FILETAG, NYC_TARGET, [20])]:
         print(f">> {file_tag}")
         train, X_train, y_train, X_dev, y_dev, test, X_test, y_test, labels = get_splits_tests_and_labels(filename, target)
         print("- Starting Random Forests Study")
-        best = random_forests_study(X_train, y_train, X_test, y_test, max_depths, file_tag)
+        best = random_forests_study(X_train, y_train, X_test, y_test, max_depths, file_tag, min_imp=0.0005)
         print("- Getting Model Evaluation (w/ dev)")
         get_model_evaluation(best, X_train, y_train, X_dev, y_dev, labels, file_tag, 'rf_best')
         print("- Plotting Feature Importance")
