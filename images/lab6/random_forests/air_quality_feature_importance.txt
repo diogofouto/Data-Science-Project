@@ -1,0 +1,22 @@
+1. feature PM10_Mean (0.5878661108056755)
+2. feature PM2.5_Mean (0.2919998547697878)
+3. feature PM2.5_Max (0.0649950305107966)
+4. feature PM10_Max (0.031227527058188497)
+5. feature PM2.5_Min (0.006396999668855553)
+6. feature PM10_Std (0.005903064991818306)
+7. feature PM10_Min (0.005097816991250671)
+8. feature O3_Max (0.003194709861098012)
+9. feature O3_Mean (0.0015051036045686376)
+10. feature PM2.5_Std (0.0013992646231146995)
+11. feature O3_Std (0.00023945479861402954)
+12. feature NO2_Min (8.59463249380306e-05)
+13. feature CO_Min (4.6582071892259583e-05)
+14. feature O3_Min (1.5955659003202755e-05)
+15. feature Unnamed: 0.1 (1.5465544109360166e-05)
+16. feature GbProv (4.375822966788071e-06)
+17. feature CO_Mean (3.532206073599995e-06)
+18. feature date (3.204687248536215e-06)
+
+0 from then on
+
+Best results with depth=10, 0.70000 features and 400 estimators, with accuracy=0.99423
