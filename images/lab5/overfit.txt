@@ -1,0 +1,17 @@
+KNN:
+	-O dataset de air quality aparenta sofrer algum overfit em todos os balancings, 
+    pois perde accuracy e recall no teste, quando comparado com o treino
+
+	-O dataset de NYC collisions também apresenta possibilidade de overfit, no 
+    entanto este só acontece no caso de undersampling.
+	
+Naive Bayes:
+	-Todos os casos apresentam resultados semelhantes entre teste e treino, 
+    por vezes até resultados contrários, onde temos mais performance em teste do 
+    que no treino, logo não há possibilidade de overfit.
+	
+Decision Trees:
+	-O dataset do NYC collisions, os resultados de teste mostram uma descida da 
+    precision de 1.00 no treino para 0.65, num dataset onde existe uma grande 
+    falta de balanço entre as classes. 
+    Neste caso é possível que tenha acontecido overfit.
