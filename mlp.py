@@ -8,9 +8,9 @@ from sklearn.metrics import accuracy_score
 
 #%% 
 # TODO FIX ADD RIGHT FILE NAMES
-file_tag_air = 'air'
-filename_air = 'data/air'
-target_air = 'DANGER'
+file_tag_air = 'air_quality'
+filename_air = 'data/air_quality'
+target_air = 'ALARM'
 
 train_air: DataFrame = read_csv(f'{filename_air}_train.csv')
 trnY_air: ndarray = train_air.pop(target_air).values
@@ -57,12 +57,19 @@ def mlp(lr_types, learning_r, max_iter, file_tag, train_X, train_Y, test_X, test
     cols = len(lr_types)
     figure()
     fig, axs = subplots(1, cols, figsize=(cols*HEIGHT, HEIGHT), squeeze=False)
+    best = ('', 0, 0)
+    last_best = 0
+    best_model = None
+    print("mlp starting!")
     for k in range(len(lr_types)):
+        print("-learning rate type:",lr_types[k])
         d = lr_types[k]
         values = {}
         for lr in learning_r:
+            print("--learning rate:",lr)
             yvalues = []
             for n in max_iter:
+                print("---max iter:",n)
                 mlp = MLPClassifier(activation='logistic', solver='sgd', learning_rate=d,
                                     learning_rate_init=lr, max_iter=n, verbose=False)
                 mlp.fit(train_X, train_Y)
@@ -75,7 +82,7 @@ def mlp(lr_types, learning_r, max_iter, file_tag, train_X, train_Y, test_X, test
             values[lr] = yvalues
         multiple_line_chart(max_iter, values, ax=axs[0, k], title=f'MLP with lr_type={d}',
                             xlabel='mx iter', ylabel='accuracy', percentage=True)
-    savefig(f'images/{file_tag}_mlp_study.png')
+    savefig(f'images/lab7/mlp/{file_tag}_mlp_study.png')
     show()
     print(f'Best results with lr_type={best[0]}, learning rate={best[1]} and {best[2]} max iter, with accuracy={last_best}')
 
@@ -83,7 +90,7 @@ def mlp(lr_types, learning_r, max_iter, file_tag, train_X, train_Y, test_X, test
     prd_trn = best_model.predict(train_X)
     prd_tst = best_model.predict(test_X)
     plot_evaluation_results(labels, train_Y, prd_trn, test_Y, prd_tst)
-    savefig(f'images/{file_tag}_mlp_best.png')
+    savefig(f'images/lab7/mlp/{file_tag}_mlp_best.png')
     show()
     
 #%%
