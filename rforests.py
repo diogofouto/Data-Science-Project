@@ -66,7 +66,7 @@ def main():
         print("- Getting Model Evaluation (w/ dev)")
         get_model_evaluation(best, X_train, y_train, X_dev, y_dev, labels, file_tag, 'rf_best')
         print("- Plotting Feature Importance")
-        plot_feature_importance(train, best, file_tag)
+        plot_feature_importance(best, train, file_tag)
         print("- Getting Model Evaluation (w/ test)")
         get_model_evaluation(best, X_train, y_train, X_test, y_test, labels, file_tag, 'rf_test')
 
