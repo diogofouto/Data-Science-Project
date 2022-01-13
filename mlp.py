@@ -36,7 +36,6 @@ last_best_air = 0
 best_model_air = None
 
 #%% 
-# TODO FIX ADD RIGHT FILE NAMES
 file_tag_nyc = 'NYC_collisions'
 filename_nyc = 'data/NYC_collisions'
 target_nyc = 'PERSON_INJURY'
@@ -152,14 +151,12 @@ def mlp(lr_types, learning_r, max_iter, file_tag, train_X, train_Y, test_X, test
     i = 0
     fig, axs = subplots(1, cols, figsize=(cols*HEIGHT, HEIGHT), squeeze=False)
     print("printing loss functions!")
-    print(loss_curves)
-    print(len(loss_curves))
     for k in range(len(lr_types)):
         losses = {}
         for lr in learning_r:
             losses[lr] = loss_curves[i]
             i += 1
-        multiple_line_chart(max_iter, losses, ax=axs[0, k], title=f'MLP Loss with lr_type={lr_types[k]} and max iter={str(max_iter[-1])}',
+        multiple_line_chart(range(0,max(max_iter)), losses, ax=axs[0, k], title=f'MLP Loss with lr_type={lr_types[k]} and max iter={str(max_iter[-1])}',
                         xlabel='mx iter', ylabel='Loss', percentage=True)
     savefig(f'images/lab7/mlp/{file_tag}_mlp_loss_study.png')
     show()
