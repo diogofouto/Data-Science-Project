@@ -1,11 +1,10 @@
-1. feature PM10_Mean (0.7681488719605862)
-2. feature PM2.5_Mean (0.2148879633803296)
-3. feature PM2.5_Max (0.010625580432848758)
-4. feature O3_Max (0.004657532636559713)
-5. feature PM2.5_Std (0.0006223692628304358)
-6. feature PM2.5_Min (0.0005350862466839549)
-7. feature NO2_Min (0.0005225960801613407)
+1. feature PM10_Mean (0.7714161143616258)
+2. feature PM2.5_Mean (0.2180079352661769)
+3. feature O3_Max (0.003638339714536195)
+4. feature PM2.5_Max (0.0032623495805757675)
+5. feature PM2.5_Std (0.0031411722854502956)
+6. feature O3_Std (0.0005340887916349008)
 
 0 from then on
 
-Best results achieved with entropy criteria, depth=10 and min_impurity_decrease=0.00050 ==> accuracy=0.99199
+Best results achieved with entropy criteria, depth=10 and min_impurity_decrease=0.00050 ==> recall=0.99134
