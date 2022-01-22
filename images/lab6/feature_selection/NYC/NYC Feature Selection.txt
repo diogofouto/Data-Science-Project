@@ -1,0 +1,16 @@
+NYC Feature Selection:
+
+Best variance threshold = 0.0; it's irrelevant for feature selection.
+
+Results with correlation threshold = 0.8 (best):
+
+knn = 1
+nb = 0.97
+rf = 0.98
+
+
+Results with f_classif k = 4 (best):
+
+knn = 1
+nb = 0.92
+rf = 1
