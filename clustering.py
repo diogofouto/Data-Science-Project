@@ -20,7 +20,6 @@ v2_air = 4
 
 data_air_pca: DataFrame = read_csv('data/air_quality_pca.csv')
 #data_air.pop('id')
-data_air_pca.pop('ALARM')
 figname_air_pca = "air_quality_pca"
 
 N_CLUSTERS_AIR = [2, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29]
@@ -35,7 +34,6 @@ v2_nyc = 4
 
 data_nyc_pca: DataFrame = read_csv('data/NYC_collisions_pca.csv')
 #data_nyc.pop('id')
-data_nyc_pca.pop('PERSON_INJURY')
 figname_nyc_pca = "nyc_collisions_pca"
 
 N_CLUSTERS_NYC = [2, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29]
