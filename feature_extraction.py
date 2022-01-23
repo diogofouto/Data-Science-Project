@@ -48,7 +48,7 @@ def do_pca(data: pd.DataFrame, file_tag, x_axis, y_axis):
 
     variables = data.columns.values
 
-    plot_variables_before_pca(data, variables)
+    #plot_variables_before_pca(data, variables)
 
     mean = data.mean(axis=0).to_list()
     centered_data = data - mean
@@ -58,13 +58,13 @@ def do_pca(data: pd.DataFrame, file_tag, x_axis, y_axis):
     components = pca.components_
     variance = pca.explained_variance_
 
-    plot_variance_ratio(pca)
+    #plot_variance_ratio(pca)
 
     transform = pca.transform(data)
 
-    pd.DataFrame(data).to_csv(f"data/{file_tag}_pca.csv")
+    pd.DataFrame(transform).to_csv(f"data/{file_tag}_pca.csv")
 
-    plot_variables_after_pca(data, transform, variables)
+    #plot_variables_after_pca(data, transform, variables)
     
 def main():
     for filename, target, file_tag, var_1, var_2 in [("data/air_quality_scaled_zscore_fs.csv",
