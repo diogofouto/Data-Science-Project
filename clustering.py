@@ -42,10 +42,10 @@ N_CLUSTERS_NYC = [2, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29]
 rows_nyc, cols_nyc = choose_grid(len(N_CLUSTERS_NYC))
 figname_nyc = "nyc_collisions"
 
-data_air = data_air.sample(frac=0.4)
-data_air_pca = data_air_pca.sample(frac=0.4)
-data_nyc = data_nyc.sample(frac=0.4)
-data_nyc_pca = data_nyc_pca.sample(frac=0.4)
+data_air = data_air.sample(frac=0.3)
+data_air_pca = data_air_pca.sample(frac=0.6)
+data_nyc = data_nyc.sample(frac=0.5)
+data_nyc_pca = data_nyc_pca.sample(frac=0.6)
 #%%
 def kmeans(data, rows, cols, N_CLUSTERS, v1, v2, figname):
     print("KMeans running")
@@ -120,7 +120,7 @@ def em(data, rows, cols, N_CLUSTERS, v1, v2, figname):
     fig.savefig(f'images/lab8/clustering/{figname}_em_line.png')
     show()
     
-#%% TODO
+#%% 
 #em(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air)
 #%% 
 #em(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
@@ -234,11 +234,11 @@ def eps_metric(data, rows, cols, v1, v2, figname):
     show()
     
 #%% TODO
-#eps_metric(data_air, rows_air, cols_air, v1_air, v2_air, figname_air)
+eps_metric(data_air, rows_air, cols_air, v1_air, v2_air, figname_air)
 #%% TODO
-#eps_metric(data_air_pca, rows_air, cols_air, v1_air, v2_air_pca, figname_air_pca)
+eps_metric(data_air_pca, rows_air, cols_air, v1_air, v2_air_pca, figname_air_pca)
 #%% TODO
-#eps_metric(data_nyc, rows_nyc, cols_nyc, v1_nyc, v2_nyc, figname_nyc)
+eps_metric(data_nyc, rows_nyc, cols_nyc, v1_nyc, v2_nyc, figname_nyc)
 
 #%% TODO
 eps_metric(data_nyc_pca, rows_nyc, cols_nyc, v1_nyc, v2_nyc, figname_nyc_pca)
@@ -316,11 +316,11 @@ def hierarchical(data, rows, cols, N_CLUSTERS, v1, v2, figname):
 
     
 #%% TODO
-#hierarchical(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air)
+hierarchical(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air)
 #%% TODO
-#hierarchical(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
+hierarchical(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
 #%% TODO
-#hierarchical(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
+hierarchical(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
 
 #%% TODO
-# hierarchical(data_nyc_pca, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc_pca)
+hierarchical(data_nyc_pca, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc_pca)
