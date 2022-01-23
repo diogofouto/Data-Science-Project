@@ -18,9 +18,10 @@ data_air.pop('ALARM')
 v1_air = 0
 v2_air = 4
 
-data_air_pca: DataFrame = read_csv('data/air_quality_pca.csv')
-#data_air.pop('id')
+data_air_pca: DataFrame = read_csv('data/air_quality_pca.csv',dtype=np.float64)
+data_air_pca.pop('i')
 figname_air_pca = "air_quality_pca"
+v2_air_pca = 2
 
 N_CLUSTERS_AIR = [2, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29]
 rows_air, cols_air = choose_grid(len(N_CLUSTERS_AIR))
@@ -29,11 +30,12 @@ figname_air = "air_quality"
 data_nyc: DataFrame = read_csv('data/NYC_collisions_scaled_minmax_fs.csv')
 #data_nyc.pop('id')
 data_nyc.pop('PERSON_INJURY')
+data_nyc.replace({False: 0, True: 1}, inplace=True)
 v1_nyc = 0
 v2_nyc = 4
 
-data_nyc_pca: DataFrame = read_csv('data/NYC_collisions_pca.csv')
-#data_nyc.pop('id')
+data_nyc_pca: DataFrame = read_csv('data/NYC_collisions_pca.csv',dtype=np.float64)
+data_nyc_pca.pop('i')
 figname_nyc_pca = "nyc_collisions_pca"
 
 N_CLUSTERS_NYC = [2, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29]
@@ -117,7 +119,7 @@ def em(data, rows, cols, N_CLUSTERS, v1, v2, figname):
 #%% TODO
 #em(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air)
 #%% TODO 
-#em(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air_pca)
+em(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
 #%%
 #em(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
 #%%
@@ -164,7 +166,7 @@ def eps_dsbased(data, rows, cols, N_CLUSTERS, v1, v2, figname):
 #%% TODO
 #eps_dsbased(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air)
 #%% TODO
-#eps_dsbased(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air_pca)
+#eps_dsbased(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
 #%% TODO
 #eps_dsbased(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
 #%% TODO
@@ -227,7 +229,7 @@ def eps_metric(data, rows, cols, v1, v2, figname):
 #%% TODO
 #eps_metric(data_air, rows_air, cols_air, v1_air, v2_air, figname_air)
 #%% TODO
-#eps_metric(data_air_pca, rows_air, cols_air, v1_air, v2_air, figname_air_pca)
+#eps_metric(data_air_pca, rows_air, cols_air, v1_air, v2_air_pca, figname_air_pca)
 #%% TODO
 #eps_metric(data_nyc, rows_nyc, cols_nyc, v1_nyc, v2_nyc, figname_nyc)
 
@@ -309,9 +311,9 @@ def hierarchical(data, rows, cols, N_CLUSTERS, v1, v2, figname):
 #%% TODO
 #hierarchical(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air)
 #%% TODO
-#hierarchical(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air_pca)
-#%%
-hierarchical(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
+#hierarchical(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
+#%% TODO
+#hierarchical(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
 
-#%%
-hierarchical(data_nyc_pca, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc_pca)
+#%% TODO
+# hierarchical(data_nyc_pca, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc_pca)

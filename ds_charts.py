@@ -241,7 +241,7 @@ def compute_mae(X: ndarray, labels: list, centroids: list) -> float:
     n = len(X)
     centroid_per_record = [centroids[labels[i]] for i in range(n)]
     partial = X - centroid_per_record
-    partial = list(partial)
+    partial = list(abs(partial))
     partial = [sum(el) for el in partial]
     partial = sum(partial)
     return math.sqrt(partial) / (n-1)
