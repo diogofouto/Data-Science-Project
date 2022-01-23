@@ -42,6 +42,10 @@ N_CLUSTERS_NYC = [2, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29]
 rows_nyc, cols_nyc = choose_grid(len(N_CLUSTERS_NYC))
 figname_nyc = "nyc_collisions"
 
+data_air = data_air.sample(frac=0.4)
+data_air_pca = data_air_pca.sample(frac=0.4)
+data_nyc = data_nyc.sample(frac=0.4)
+data_nyc_pca = data_nyc_pca.sample(frac=0.4)
 #%%
 def kmeans(data, rows, cols, N_CLUSTERS, v1, v2, figname):
     print("KMeans running")
@@ -152,7 +156,9 @@ def eps_dsbased(data, rows, cols, N_CLUSTERS, v1, v2, figname):
             i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
         else:
             mse.append(0)
+            mae.append(0)
             sc.append(0)
+            db.append(0)
     fig.savefig(f'images/lab8/clustering/{figname}_eps_dsbased_scatter.png')
     show()
     fig, ax = subplots(1, 4, figsize=(12, 3), squeeze=False)
@@ -164,13 +170,13 @@ def eps_dsbased(data, rows, cols, N_CLUSTERS, v1, v2, figname):
     show()
     
 #%% TODO
-#eps_dsbased(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air)
+eps_dsbased(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air)
 #%% TODO
-#eps_dsbased(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
+eps_dsbased(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
 #%% TODO
-#eps_dsbased(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
+eps_dsbased(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
 #%% TODO
-#eps_dsbased(data_nyc_pca, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc_pca)
+eps_dsbased(data_nyc_pca, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc_pca)
 
 
 #%%
@@ -179,6 +185,7 @@ def eps_metric(data, rows, cols, v1, v2, figname):
     METRICS = ['euclidean', 'cityblock', 'chebyshev', 'cosine', 'jaccard']
     distances = []
     for m in METRICS:
+        print("-",m)
         dist = np.mean(np.mean(squareform(pdist(data.values, metric=m))))
         distances.append(dist)
 
@@ -234,7 +241,7 @@ def eps_metric(data, rows, cols, v1, v2, figname):
 #eps_metric(data_nyc, rows_nyc, cols_nyc, v1_nyc, v2_nyc, figname_nyc)
 
 #%% TODO
-#eps_metric(data_nyc_pca, rows_nyc, cols_nyc, v1_nyc, v2_nyc, figname_nyc_pca)
+eps_metric(data_nyc_pca, rows_nyc, cols_nyc, v1_nyc, v2_nyc, figname_nyc_pca)
 
 #%%
 def hierarchical(data, rows, cols, N_CLUSTERS, v1, v2, figname):
