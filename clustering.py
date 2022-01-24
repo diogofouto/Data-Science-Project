@@ -42,10 +42,10 @@ N_CLUSTERS_NYC = [2, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29]
 rows_nyc, cols_nyc = choose_grid(len(N_CLUSTERS_NYC))
 figname_nyc = "nyc_collisions"
 
-data_air = data_air.sample(frac=0.3)
-data_air_pca = data_air_pca.sample(frac=0.6)
-data_nyc = data_nyc.sample(frac=0.5)
-data_nyc_pca = data_nyc_pca.sample(frac=0.6)
+data_air = data_air.sample(frac=0.15)
+data_air_pca = data_air_pca.sample(frac=0.2)
+data_nyc = data_nyc.sample(frac=0.4)
+data_nyc_pca = data_nyc_pca.sample(frac=0.4)
 #%%
 def kmeans(data, rows, cols, N_CLUSTERS, v1, v2, figname):
     print("KMeans running")
@@ -85,8 +85,7 @@ def kmeans(data, rows, cols, N_CLUSTERS, v1, v2, figname):
 #%%
 #kmeans(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air)
 #%%
-# TODO:
-# kmeans(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air_pca)
+# kmeans(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
 
 #%%
 def em(data, rows, cols, N_CLUSTERS, v1, v2, figname):
@@ -169,14 +168,14 @@ def eps_dsbased(data, rows, cols, N_CLUSTERS, v1, v2, figname):
     fig.savefig(f'images/lab8/clustering/{figname}_eps_dsbased_line.png')
     show()
     
-#%% TODO
-eps_dsbased(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air)
-#%% TODO
-eps_dsbased(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
-#%% TODO
-eps_dsbased(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
-#%% TODO
-eps_dsbased(data_nyc_pca, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc_pca)
+#%% 
+eps_dsbased(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, 2, figname_air)
+#%% 
+#eps_dsbased(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
+#%% TODO bad results?
+#eps_dsbased(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
+#%% TODO bad results?
+#eps_dsbased(data_nyc_pca, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc_pca)
 
 
 #%%
@@ -233,15 +232,15 @@ def eps_metric(data, rows, cols, v1, v2, figname):
     fig.savefig(f'images/lab8/clustering/{figname}_eps_metric_bar.png')
     show()
     
-#%% TODO
-eps_metric(data_air, rows_air, cols_air, v1_air, v2_air, figname_air)
-#%% TODO
-eps_metric(data_air_pca, rows_air, cols_air, v1_air, v2_air_pca, figname_air_pca)
-#%% TODO
-eps_metric(data_nyc, rows_nyc, cols_nyc, v1_nyc, v2_nyc, figname_nyc)
+#%%
+#eps_metric(data_air, rows_air, cols_air, v1_air, v2_air, figname_air)
+#%%  TODO BAD RESULTS?
+#eps_metric(data_air_pca, rows_air, cols_air, v1_air, v2_air_pca, figname_air_pca)
+#%% 
+#eps_metric(data_nyc, rows_nyc, cols_nyc, v1_nyc, v2_nyc, figname_nyc)
 
-#%% TODO
-eps_metric(data_nyc_pca, rows_nyc, cols_nyc, v1_nyc, v2_nyc, figname_nyc_pca)
+#%% 
+#eps_metric(data_nyc_pca, rows_nyc, cols_nyc, v1_nyc, v2_nyc, figname_nyc_pca)
 
 #%%
 def hierarchical(data, rows, cols, N_CLUSTERS, v1, v2, figname):
@@ -251,7 +250,7 @@ def hierarchical(data, rows, cols, N_CLUSTERS, v1, v2, figname):
     mae: list = []
     db: list = []
     rows, cols = choose_grid(len(N_CLUSTERS))
-    _, axs = subplots(rows, cols, figsize=(cols*5, rows*5), squeeze=False)
+    fig, axs = subplots(rows, cols, figsize=(cols*5, rows*5), squeeze=False)
     i, j = 0, 0
     for n in range(len(N_CLUSTERS)):
         print("-",n)
@@ -261,18 +260,20 @@ def hierarchical(data, rows, cols, N_CLUSTERS, v1, v2, figname):
         labels = estimator.labels_
         centers = compute_centroids(data, labels)
         mse.append(compute_mse(data.values, labels, centers))
-        sc.append(silhouette_score(data, labels))
         mae.append(compute_mae(data.values, labels, centers))
+        sc.append(silhouette_score(data, labels))
         db.append(davies_bouldin_score(data, labels))
         plot_clusters(data, v2, v1, labels, centers, k, f'Hierarchical k={k}', ax=axs[i,j])
         i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
-    show()
+    fig.savefig(f'images/lab8/clustering/{figname}_hierarquical_clusters.png')
     fig, ax = subplots(1, 4, figsize=(12, 3), squeeze=False)
     plot_line(N_CLUSTERS, mse, title='Hierarchical MSE', xlabel='k', ylabel='MSE', ax=ax[0, 0])
     plot_line(N_CLUSTERS, sc, title='Hierarchical SC', xlabel='k', ylabel='SC', ax=ax[0, 1], percentage=True)
     plot_line(N_CLUSTERS, mae, title='Hierarchical MAE', xlabel='k', ylabel='MAE', ax=ax[0, 2], percentage=True)
     plot_line(N_CLUSTERS, db, title='Hierarchical Davies Bouldin', xlabel='k', ylabel='Davies Bouldin', ax=ax[0, 3], percentage=True)
-    show()
+    fig.savefig(f'images/lab8/clustering/{figname}_hierarquical_lines.png')
+    
+    print("plotting bars")
     
     METRICS = ['euclidean', 'cityblock', 'chebyshev', 'cosine', 'jaccard']
     LINKS = ['complete', 'average']
@@ -283,30 +284,34 @@ def hierarchical(data, rows, cols, N_CLUSTERS, v1, v2, figname):
     values_db = {}
     rows = len(METRICS)
     cols = len(LINKS)
-    _, axs = subplots(rows, cols, figsize=(cols*5, rows*5), squeeze=False)
+    fig, axs = subplots(rows, cols, figsize=(cols*5, rows*5), squeeze=False)
     for i in range(len(METRICS)):
+        print("-",i)
         mse: list = []
         sc: list = []
+        mae: list = []
+        db: list = []
         m = METRICS[i]
         for j in range(len(LINKS)):
+            print("--",j)
             link = LINKS[j]
             estimator = AgglomerativeClustering(n_clusters=k, linkage=link, affinity=m )
             estimator.fit(data)
             labels = estimator.labels_
             centers = compute_centroids(data, labels)
             mse.append(compute_mse(data.values, labels, centers))
-            sc.append(silhouette_score(data, labels))
             mae.append(compute_mae(data.values, labels, centers))
+            sc.append(silhouette_score(data, labels))
             db.append(davies_bouldin_score(data, labels))
             plot_clusters(data, v2, v1, labels, centers, k, f'Hierarchical k={k} metric={m} link={link}', ax=axs[i,j])
         values_mse[m] = mse
-        values_sc[m] = sc
         values_mae[m] = mae
+        values_sc[m] = sc
         values_db[m] = db
     fig.savefig(f'images/lab8/clustering/{figname}_hierarchical_scatter.png')
     show()
     
-    _, ax = subplots(1, 4, figsize=(12, 3), squeeze=False)
+    fig, ax = subplots(1, 4, figsize=(12, 3), squeeze=False)
     multiple_bar_chart(LINKS, values_mse, title=f'Hierarchical MSE', xlabel='metric', ylabel='MSE', ax=ax[0, 0])
     multiple_bar_chart(LINKS, values_sc, title=f'Hierarchical SC', xlabel='metric', ylabel='SC', ax=ax[0, 1], percentage=True)
     multiple_bar_chart(LINKS, values_mae, title=f'Hierarchical MAE', xlabel='metric', ylabel='MAE', ax=ax[0, 2])
@@ -315,12 +320,12 @@ def hierarchical(data, rows, cols, N_CLUSTERS, v1, v2, figname):
     show()
 
     
-#%% TODO
-hierarchical(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air)
-#%% TODO
-hierarchical(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
-#%% TODO
-hierarchical(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
+#%%
+#hierarchical(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
 
-#%% TODO
-hierarchical(data_nyc_pca, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc_pca)
+#%%
+#hierarchical(data_nyc_pca, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc_pca)
+#%% 
+#hierarchical(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air)
+#%%
+#hierarchical(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
