@@ -237,6 +237,15 @@ def compute_mse(X: ndarray, labels: list, centroids: list) -> float:
     partial = sum(partial)
     return math.sqrt(partial) / (n-1)
 
+def compute_mae(X: ndarray, labels: list, centroids: list) -> float:
+    n = len(X)
+    centroid_per_record = [centroids[labels[i]] for i in range(n)]
+    partial = X - centroid_per_record
+    partial = list(abs(partial))
+    partial = [sum(el) for el in partial]
+    partial = sum(partial)
+    return math.sqrt(partial) / (n-1)
+
 
 def two_scales(ax1, time, data1, data2, c1, c2, xlabel='', ylabel1='', ylabel2=''):
     ax2 = ax1.twinx()
