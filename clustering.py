@@ -72,20 +72,20 @@ def kmeans(data, rows, cols, N_CLUSTERS, v1, v2, figname):
     fig, ax = subplots(1, 3, figsize=(9, 3), squeeze=False)
     plot_line(N_CLUSTERS, mse, title='KMeans MSE', xlabel='k', ylabel='MSE', ax=ax[0, 0])
     plot_line(N_CLUSTERS, sc, title='KMeans SC', xlabel='k', ylabel='SC', ax=ax[0, 1], percentage=True)
-    plot_line(N_CLUSTERS, db, title='KMeans Davies Bouldin', xlabel='k', ylabel='Davies Bouldin', ax=ax[0, 2], percentage=True)
-    #plot_line(N_CLUSTERS, mae, title='KMeans MAE', xlabel='k', ylabel='MAE', ax=ax[0, 3], percentage=True)
+    plot_line(N_CLUSTERS, db, title='KMeans Davies Bouldin', xlabel='k', ylabel='Davies Bouldin', ax=ax[0, 2])
+    #plot_line(N_CLUSTERS, mae, title='KMeans MAE', xlabel='k', ylabel='MAE', ax=ax[0, 3])
     fig.savefig(f'images/lab8/clustering/{figname}_kmeans_line.png')
     show()
     
-#%%
-#kmeans(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
+#%% TODO REPEAT ALL NEW METRIC
+kmeans(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
 
 #%%
-#kmeans(data_nyc_pca, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc_pca)
+kmeans(data_nyc_pca, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc_pca)
 #%%
-#kmeans(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air)
+kmeans(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air)
 #%%
-# kmeans(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
+kmeans(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
 
 #%%
 def em(data, rows, cols, N_CLUSTERS, v1, v2, figname):
@@ -114,24 +114,24 @@ def em(data, rows, cols, N_CLUSTERS, v1, v2, figname):
     fig, ax = subplots(1, 4, figsize=(12, 3), squeeze=False)
     plot_line(N_CLUSTERS, mse, title='EM MSE', xlabel='k', ylabel='MSE', ax=ax[0, 0])
     plot_line(N_CLUSTERS, sc, title='EM SC', xlabel='k', ylabel='SC', ax=ax[0, 1], percentage=True)
-    plot_line(N_CLUSTERS, mae, title='EM MAE', xlabel='k', ylabel='MAE', ax=ax[0, 2], percentage=True)
-    plot_line(N_CLUSTERS, db, title='EM Davies Bouldin', xlabel='k', ylabel='Davies Bouldin', ax=ax[0, 3], percentage=True)
+    plot_line(N_CLUSTERS, mae, title='EM MAE', xlabel='k', ylabel='MAE', ax=ax[0, 2])
+    plot_line(N_CLUSTERS, db, title='EM Davies Bouldin', xlabel='k', ylabel='Davies Bouldin', ax=ax[0, 3])
     fig.savefig(f'images/lab8/clustering/{figname}_em_line.png')
     show()
     
 #%% 
-#em(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air)
+em(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air)
 #%% 
-#em(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
+em(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
 #%%
-#em(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
+em(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
 #%%
-#em(data_nyc_pca, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc_pca)
+em(data_nyc_pca, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc_pca)
 
 #%%
 def eps_dsbased(data, rows, cols, N_CLUSTERS, v1, v2, figname):
     print("EPS DS running")
-    EPS = [2.5, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    EPS = [0.1, 0.2, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 4, 5]
     mse: list = []
     sc: list = []
     mae: list = []
@@ -163,19 +163,19 @@ def eps_dsbased(data, rows, cols, N_CLUSTERS, v1, v2, figname):
     fig, ax = subplots(1, 4, figsize=(12, 3), squeeze=False)
     plot_line(EPS, mse, title='DBSCAN MSE', xlabel='eps', ylabel='MSE', ax=ax[0, 0])
     plot_line(EPS, sc, title='DBSCAN SC', xlabel='eps', ylabel='SC', ax=ax[0, 1], percentage=True)
-    plot_line(EPS, mae, title='DBSCAN MAE', xlabel='eps', ylabel='MAE', ax=ax[0, 2], percentage=True)
-    plot_line(EPS, db, title='DBSCAN Davies Bouldin', xlabel='eps', ylabel='Davies Bouldin', ax=ax[0, 3], percentage=True)
+    plot_line(EPS, mae, title='DBSCAN MAE', xlabel='eps', ylabel='MAE', ax=ax[0, 2])
+    plot_line(EPS, db, title='DBSCAN Davies Bouldin', xlabel='eps', ylabel='Davies Bouldin', ax=ax[0, 3])
     fig.savefig(f'images/lab8/clustering/{figname}_eps_dsbased_line.png')
     show()
     
 #%% 
 eps_dsbased(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, 2, figname_air)
 #%% 
-#eps_dsbased(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
+eps_dsbased(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
 #%% TODO bad results?
-#eps_dsbased(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
+eps_dsbased(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
 #%% TODO bad results?
-#eps_dsbased(data_nyc_pca, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc_pca)
+eps_dsbased(data_nyc_pca, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc_pca)
 
 
 #%%
@@ -228,19 +228,19 @@ def eps_metric(data, rows, cols, v1, v2, figname):
     bar_chart(METRICS, mse, title='DBSCAN MSE', xlabel='metric', ylabel='MSE', ax=ax[0, 0])
     bar_chart(METRICS, sc, title='DBSCAN SC', xlabel='metric', ylabel='SC', ax=ax[0, 1], percentage=True)
     bar_chart(METRICS, mae, title='DBSCAN MAE', xlabel='metric', ylabel='MAE', ax=ax[0, 2])
-    bar_chart(METRICS, db, title='DBSCAN Davies Bouldin', xlabel='metric', ylabel='Davies Bouldin', ax=ax[0, 3], percentage=True)
+    bar_chart(METRICS, db, title='DBSCAN Davies Bouldin', xlabel='metric', ylabel='Davies Bouldin', ax=ax[0, 3])
     fig.savefig(f'images/lab8/clustering/{figname}_eps_metric_bar.png')
     show()
     
 #%%
-#eps_metric(data_air, rows_air, cols_air, v1_air, v2_air, figname_air)
+eps_metric(data_air, rows_air, cols_air, v1_air, v2_air, figname_air)
 #%%  TODO BAD RESULTS?
-#eps_metric(data_air_pca, rows_air, cols_air, v1_air, v2_air_pca, figname_air_pca)
+eps_metric(data_air_pca, rows_air, cols_air, v1_air, v2_air_pca, figname_air_pca)
 #%% 
-#eps_metric(data_nyc, rows_nyc, cols_nyc, v1_nyc, v2_nyc, figname_nyc)
+eps_metric(data_nyc, rows_nyc, cols_nyc, v1_nyc, v2_nyc, figname_nyc)
 
 #%% 
-#eps_metric(data_nyc_pca, rows_nyc, cols_nyc, v1_nyc, v2_nyc, figname_nyc_pca)
+eps_metric(data_nyc_pca, rows_nyc, cols_nyc, v1_nyc, v2_nyc, figname_nyc_pca)
 
 #%%
 def hierarchical(data, rows, cols, N_CLUSTERS, v1, v2, figname):
@@ -269,8 +269,8 @@ def hierarchical(data, rows, cols, N_CLUSTERS, v1, v2, figname):
     fig, ax = subplots(1, 4, figsize=(12, 3), squeeze=False)
     plot_line(N_CLUSTERS, mse, title='Hierarchical MSE', xlabel='k', ylabel='MSE', ax=ax[0, 0])
     plot_line(N_CLUSTERS, sc, title='Hierarchical SC', xlabel='k', ylabel='SC', ax=ax[0, 1], percentage=True)
-    plot_line(N_CLUSTERS, mae, title='Hierarchical MAE', xlabel='k', ylabel='MAE', ax=ax[0, 2], percentage=True)
-    plot_line(N_CLUSTERS, db, title='Hierarchical Davies Bouldin', xlabel='k', ylabel='Davies Bouldin', ax=ax[0, 3], percentage=True)
+    plot_line(N_CLUSTERS, mae, title='Hierarchical MAE', xlabel='k', ylabel='MAE', ax=ax[0, 2])
+    plot_line(N_CLUSTERS, db, title='Hierarchical Davies Bouldin', xlabel='k', ylabel='Davies Bouldin', ax=ax[0, 3])
     fig.savefig(f'images/lab8/clustering/{figname}_hierarquical_lines.png')
     
     print("plotting bars")
@@ -315,17 +315,17 @@ def hierarchical(data, rows, cols, N_CLUSTERS, v1, v2, figname):
     multiple_bar_chart(LINKS, values_mse, title=f'Hierarchical MSE', xlabel='metric', ylabel='MSE', ax=ax[0, 0])
     multiple_bar_chart(LINKS, values_sc, title=f'Hierarchical SC', xlabel='metric', ylabel='SC', ax=ax[0, 1], percentage=True)
     multiple_bar_chart(LINKS, values_mae, title=f'Hierarchical MAE', xlabel='metric', ylabel='MAE', ax=ax[0, 2])
-    multiple_bar_chart(LINKS, values_db, title=f'Hierarchical Davies Bouldin', xlabel='metric', ylabel='Davies Bouldin', ax=ax[0, 3], percentage=True)
+    multiple_bar_chart(LINKS, values_db, title=f'Hierarchical Davies Bouldin', xlabel='metric', ylabel='Davies Bouldin', ax=ax[0, 3])
     fig.savefig(f'images/lab8/clustering/{figname}_hierarquical_bar.png')
     show()
 
     
 #%%
-#hierarchical(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
+hierarchical(data_nyc, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc)
 
 #%%
-#hierarchical(data_nyc_pca, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc_pca)
+hierarchical(data_nyc_pca, rows_nyc, cols_nyc, N_CLUSTERS_NYC, v1_nyc, v2_nyc, figname_nyc_pca)
 #%% 
-#hierarchical(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air)
+hierarchical(data_air, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air, figname_air)
 #%%
-#hierarchical(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
+hierarchical(data_air_pca, rows_air, cols_air, N_CLUSTERS_AIR, v1_air, v2_air_pca, figname_air_pca)
