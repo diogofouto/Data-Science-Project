@@ -192,7 +192,7 @@ def eps_minmax(data, rows, cols, N_CLUSTERS, v1, v2, figname):
     i, j = 0, 0
     for n in range(len(MIN)):
         print("-",n)
-        estimator = DBSCAN(eps=EPS, min_samples=MIN[n])
+        estimator = DBSCA(eps=EPS, min_samples=MIN[n])
         estimator.fit(data)
         labels = estimator.labels_
         k = len(set(labels)) - (1 if -1 in labels else 0)
